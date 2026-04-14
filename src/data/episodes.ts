@@ -40,7 +40,7 @@ export type CourseData = {
 export const courseData: CourseData = {
   course_title: "English Navigator",
   episodes: [
-    // --- Lesson 1 - Episode 1: Ms. Smith's Discovery ---
+    // --- Lesson 1 (Episode 1-4) ---
     {
       id: 1,
       title: "Ms. Smith's Discovery",
@@ -66,8 +66,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'Wagashi' や 'Adzuki' などの日本語由来の単語も、英語のリズムの中で滑らかに発音しましょう。",
       shadowingTips: "【コツ】'However' の後の「間」を意識すると、逆接のニュアンスが伝わりやすくなります。"
     },
-
-    // --- Lesson 1 - Episode 2: The Origin of Wagashi ---
     {
       id: 2,
       title: "The Origin of Wagashi",
@@ -93,8 +91,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】時代の名前（Jomon, Nara, Muromachi）をはっきり言うと、歴史の流れが聞き手に伝わります。",
       shadowingTips: "【コツ】'various' [vέəriəs] の V の発音を意識して、前歯を軽く唇に当ててみましょう。"
     },
-
-    // --- Lesson 1 - Episode 3: Modern Wagashi and SNS ---
     {
       id: 3,
       title: "Modern Wagashi and SNS",
@@ -120,8 +116,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'prefer Western sweets to wagashi' の対比を意識して、強弱をつけてみましょう。",
       shadowingTips: "【コツ】'social media' の発音はカタカナの「ソ・シャル」にならないようスムーズに。"
     },
-
-    // --- Lesson 1 - Episode 4: Easy Strawberry Mochi Recipe ---
     {
       id: 4,
       title: "Easy Strawberry Mochi Recipe",
@@ -145,10 +139,9 @@ export const courseData: CourseData = {
       ],
       dictation_items: ["remove the hulls", "divide the bean paste into", "in a heat resistant bowl", "mixture in a microwave oven", "tear the mochi into eight"],
       overlappingTips: "【コツ】命令文（Wash, Divide, Put...）で始まるので、手順を指示するリズムで読みましょう。",
-      shadowingTips: "【コツ】'microwave' [máikrəwèiv] の二重母音とアクセントに注意して追いかけてください。"
+      shadowingTips: "【コツ】'microwave' [máikrəwèiv] の二重母音 and アクセントに注意して追いかけてください。"
     },
-
-    // --- Lesson 2 - Episode 1: The Evolution of Phones ---
+    // --- Lesson 2 (Episode 5-8) ---
     {
       id: 5,
       title: "The Evolution of Phones",
@@ -174,8 +167,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'1870s' や '1970s' などの年代の読み（sの発音）を落とさないようにしましょう。",
       shadowingTips: "【コツ】'However' の後に置かれる「カンマ」の溜めを意識して、逆接の情報を強調してください。"
     },
-
-    // --- Lesson 2 - Episode 2: The Rise of Smartphones ---
     {
       id: 6,
       title: "The Rise of Smartphones",
@@ -199,10 +190,8 @@ export const courseData: CourseData = {
       ],
       dictation_items: ["spread quickly in the", "through the Internet you can", "pay for goods and services", "spent an average of", "never turn their phones off"],
       overlappingTips: "【コツ】'192 minutes' や '345 minutes' などの数字を正確に、はっきりと発音しましょう。",
-      shadowingTips: "【コツ】'increase' のアクセント位置（後ろの ea の部分）に注意して追いかけてください。"
+      shadowingTips: "【コツ】'increase' のアクセント位置（後ろの ea の部分）に注意して追いください。"
     },
-
-    // --- Lesson 2 - Episode 3: Digital Detox Advice (1 & 2) ---
     {
       id: 7,
       title: "Digital Detox Advice (1 & 2)",
@@ -228,8 +217,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'mentally and physically' はセットでリズムよく。'and' を弱く読むのがポイントです。",
       shadowingTips: "【コツ】'instead of' [instéd əv] は2語を繋げて一つの単語のように発音しましょう。"
     },
-
-    // --- Lesson 2 - Episode 4: Support and Goal Setting ---
     {
       id: 8,
       title: "Support and Goal Setting",
@@ -254,10 +241,8 @@ export const courseData: CourseData = {
       dictation_items: ["with their help you can", "even if you cannot reach", "revise your plan and start", "use her time more effectively", "refreshed and focused in her"],
       overlappingTips: "【コツ】'You can do it!' は自分や相手を勇気づけるように明るく力強く発音しましょう。",
       shadowingTips: "【コツ】'effectively' の語尾の '-ly' まで丁寧に発音を追いかけてみてください。"
-    }
-  ] // ← ここで episodes 配列を閉じる
-},
-// --- Lesson 3 - Episode 1: Bosses vs. Leaders ---
+    },
+    // --- Lesson 3 (Episode 9-12) ---
     {
       id: 9,
       title: "Bosses vs. Leaders",
@@ -273,7 +258,7 @@ export const courseData: CourseData = {
         { word: "absolute", meaning: "絶対的な", options: ["一時的な", "絶対的な", "弱い", "部分的な"] },
         { word: "direction", meaning: "指示", options: ["指示", "練習", "会話", "質問"] },
         { word: "threaten", meaning: "〜を脅す", options: ["〜を助ける", "〜を褒める", "〜を脅す", "〜を笑う"] },
-        { word: "consider", meaning: "〜を考慮する", options: ["〜を無視する", "〜を考慮する", "〜を忘れる", "〜を壊す"] }
+        { word: "consider", meaning: "〜を考慮する", options: ["〜を考慮する", "〜を無視する", "〜を忘れる", "〜を壊す"] }
       ],
       key_phrases: [
         { phrase: "rather than ~", explanation: "「～というよりはむしろ」。2つのものを対比させる時に使います。" },
@@ -283,8 +268,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'Boss'（支配）と 'Leader'（共感）の対比を意識して、声のトーンを変えてみましょう。",
       shadowingTips: "【コツ】'absolute' や 'threatens' など、強い意味を持つ単語のアクセントを強調してください。"
     },
-
-    // --- Lesson 3 - Episode 2: Short-term Goals ---
     {
       id: 10,
       title: "Short-term Goals",
@@ -310,8 +293,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'If you need to sell...' の部分は、切迫感を持たせて少し早口で読んでみましょう。",
       shadowingTips: "【コツ】'analyze' [ǽnəlàiz] の最初の母音をしっかり開いて発音しましょう。"
     },
-
-    // --- Lesson 3 - Episode 3: Long-term Goals ---
     {
       id: 11,
       title: "Long-term Goals",
@@ -337,8 +318,6 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'motivation' や 'cooperation' など、長い単語のリズムを崩さないように注意しましょう。",
       shadowingTips: "【コツ】'atmosphere' [ǽtməsfìər] の発音は、カタカナの「アトモスフィア」にならないよう息を混ぜて。"
     },
-
-    // --- Lesson 3 - Episode 4: Leadership Checklist ---
     {
       id: 12,
       title: "Leadership Checklist",
