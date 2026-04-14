@@ -74,7 +74,7 @@ const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: n
         <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white mb-2 shadow-md"><Mic size={32} /></div>
         <h2 className="text-3xl font-black text-slate-800">Step 6: Overlapping</h2>
         <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-4 mt-4 text-center">
-          <p className="text-sm md:text-base font-bold text-orange-700 leading-relaxed">英語の音声を聴きながら、その音声にピッタリ重ねてスクリプトを同時に音読しよう！</p>
+          <p className="text-sm md:text-base font-bold text-orange-700 leading-relaxed">音声を聴きながらピッタリ重ねて音読しよう！</p>
         </div>
       </div>
       <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-slate-100 relative text-left">
@@ -107,7 +107,7 @@ const ShadowingInternal = ({ script, rate, onNext }: { script: string, rate: num
         <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white mb-2 shadow-md"><Headphones size={32} /></div>
         <h2 className="text-3xl font-black text-slate-800">Step 7: Shadowing</h2>
         <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-4 mt-4 max-w-2xl mx-auto text-center">
-          <p className="text-sm md:text-base font-bold text-orange-700 leading-relaxed">英語の音声をすぐ後ろから影（shadow）のように追いかけて音読しよう！</p>
+          <p className="text-sm md:text-base font-bold text-orange-700 leading-relaxed">音声を影のように追いかけて音読しよう！</p>
         </div>
       </div>
       <div className="bg-white rounded-[32px] p-10 shadow-xl border-4 border-slate-100 flex flex-col items-center gap-6">
@@ -120,6 +120,7 @@ const ShadowingInternal = ({ script, rate, onNext }: { script: string, rate: num
   );
 };
 
+// --- ここが修正ポイント: export default に変更 ---
 export default function App() {
   const [currentStep, setCurrentStep] = useState<'menu' | 'listening' | 'quiz' | 'vocabulary' | 'phrases' | 'dictation' | 'reading' | 'overlapping' | 'shadowing' | 'result'>('menu');
   const [selectedEpisode, setSelectedEpisode] = useState<Episode>(courseData.episodes[0]);
@@ -203,10 +204,6 @@ export default function App() {
                 <h2 className="text-6xl md:text-7xl font-black text-orange-700 leading-none tracking-tighter relative z-10">English<br /><span className="text-orange-500">Navigator</span></h2>
                 
                 <div className="mt-8 relative z-10 flex flex-col items-center gap-3">
-                  <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest">
-                    <Zap size={14} className="text-orange-400" />
-                    Speed Control
-                  </div>
                   <div className="bg-white p-1.5 rounded-2xl shadow-md border-2 border-orange-100 flex gap-1">
                     {[0.6, 0.8, 1.0, 1.1].map((rate) => (
                       <button
@@ -228,7 +225,6 @@ export default function App() {
                 {renderLessonSection(2, 5, 8)}
                 {renderLessonSection(3, 9, 12)}
               </div>
-              <p className="text-center text-slate-400 font-bold text-sm pb-10">Master English through Listening, Reading, and Speaking.</p>
             </div>
           )}
 
