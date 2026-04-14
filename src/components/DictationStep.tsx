@@ -3,33 +3,30 @@ import { Mic, CheckCircle, Volume2, ChevronRight } from 'lucide-react';
 
 interface DictationStepProps {
   script: string;
-  items: string[];
+  items: string[]; // ここに「文全体」が入ってくる想定
   rate: number;
   onNext: () => void;
 }
 
-export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onNext }) => {
+export const DictationStep: React.FC<DictationStepProps> = ({ items, rate, onNext }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [wordIndex, setWordIndex] = useState(0);
   const [userInput, setUserInput] = useState('');
   const [isPhraseComplete, setIsPhraseComplete] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   
-  // 音源を事前にロード（グローバルレベルで保持）
   const correctAudio = useRef(new Audio('/correct.mp3'));
 
-  const currentPhrase = items[currentIndex];
-  const targetWords = currentPhrase ? currentPhrase.split(/\s+/) : [];
+  // 現在のターゲット文
+  const currentSentence = items[currentIndex];
+  // 文を単語に分解（空欄判定用）
+  const allWordsInSentence = currentSentence ? currentSentence.split(/\s+/) : [];
 
-  const getTargetSentence = () => {
-    if (!currentPhrase) return "";
-    const sentences = script.split(/(?<=[.!?])\s+/);
-    return sentences.find(s => s.toLowerCase().includes(currentPhrase.toLowerCase())) || currentPhrase;
-  };
+  // 【教育的カスタマイズ】
+  // 全単語を入力させるのは大変なので、「3文字以上の単語」をランダムに、
+  // もしくは特定のルールで空欄にするロジックにすると生徒の負担が減ります。
+  // 今回はご要望通り「提示された文の全単語を順に入力させる」流れを維持します。
 
-  const targetSentence = getTargetSentence();
-
-  // ライブラリの準備
   useEffect(() => {
     const scriptTag = document.createElement('script');
     scriptTag.src = 'https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js';
@@ -44,42 +41,37 @@ export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onN
       window.speechSynthesis.cancel();
       const u = new SpeechSynthesisUtterance(text);
       u.lang = 'en-US';
-      u.rate = 1.0;
+      u.rate = rate; // App.tsx から渡された速度を反映
       window.speechSynthesis.speak(u);
     }
   };
 
-  // 即時実行エフェクト
   const handleImmediateSuccess = () => {
-    // 1. 音を即座に再生
     correctAudio.current.currentTime = 0;
     correctAudio.current.play();
 
-    // 2. クラッカーを即座に発射
     if ((window as any).confetti) {
       (window as any).confetti({
-        particleCount: 100, // ボリュームアップ
-        spread: 90,
-        origin: { y: 0.7 },
+        particleCount: 40,
+        spread: 70,
+        origin: { y: 0.8 },
         zIndex: 9999
       });
     }
   };
 
-  // onChangeの中で直接判定（useEffectを介さない）
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setUserInput(val);
 
     const normalize = (str: string) => str.toLowerCase().trim().replace(/[^a-z0-9]/g, '');
     const cleanUser = normalize(val);
-    const cleanTarget = normalize(targetWords[wordIndex]);
+    const cleanTarget = normalize(allWordsInSentence[wordIndex]);
 
     if (cleanUser === cleanTarget && cleanUser.length > 0) {
-      // 一致した瞬間にエフェクト！
       handleImmediateSuccess();
 
-      if (wordIndex < targetWords.length - 1) {
+      if (wordIndex < allWordsInSentence.length - 1) {
         setWordIndex(prev => prev + 1);
         setUserInput('');
       } else {
@@ -90,7 +82,7 @@ export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onN
   };
 
   useEffect(() => {
-    if (targetSentence) speak(targetSentence);
+    if (currentSentence) speak(currentSentence);
   }, [currentIndex]);
 
   useEffect(() => {
@@ -108,7 +100,7 @@ export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onN
     }
   };
 
-  if (!currentPhrase) return null;
+  if (!currentSentence) return null;
 
   return (
     <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in duration-500 font-pop">
@@ -117,11 +109,12 @@ export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onN
           <Mic size={32} />
         </div>
         <h2 className="text-3xl font-black text-slate-800">Step 4: Dictation</h2>
+        <p className="text-slate-500 font-bold">音声を聞いて、一文を完成させよう！</p>
       </div>
 
       <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-slate-100 space-y-8 text-center">
         <button
-          onClick={() => speak(targetSentence)}
+          onClick={() => speak(currentSentence)}
           className="mx-auto flex items-center gap-3 px-8 py-4 bg-orange-100 text-orange-600 rounded-2xl font-black hover:bg-orange-200 transition-all active:scale-95 shadow-sm"
         >
           <Volume2 size={24} />
@@ -129,41 +122,36 @@ export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onN
         </button>
 
         <div className="space-y-6">
-          <div className="text-xl md:text-2xl font-bold text-slate-700 leading-relaxed text-left px-6 py-12 bg-slate-50 rounded-[40px] border-2 border-slate-100 shadow-inner">
-            {targetSentence.split(new RegExp(`(${currentPhrase})`, 'i')).map((part, i) => {
-              if (part.toLowerCase() === currentPhrase.toLowerCase()) {
-                return (
-                  <span key={i} className="inline-flex flex-wrap items-center gap-x-3 gap-y-2 mx-1 px-4 py-2 bg-white rounded-2xl border-2 border-orange-100 shadow-sm">
-                    {targetWords.map((word, wIdx) => {
-                      const isDone = wIdx < wordIndex || isPhraseComplete;
-                      const isCurrent = wIdx === wordIndex && !isPhraseComplete;
+          <div className="text-xl md:text-2xl font-bold text-slate-700 leading-relaxed text-left px-8 py-16 bg-slate-50 rounded-[40px] border-2 border-slate-100 shadow-inner flex flex-wrap gap-x-3 gap-y-4 justify-center">
+            {allWordsInSentence.map((word, wIdx) => {
+              const isDone = wIdx < wordIndex || isPhraseComplete;
+              const isCurrent = wIdx === wordIndex && !isPhraseComplete;
 
-                      if (isDone) {
-                        return <span key={wIdx} className="text-emerald-600">{word}</span>;
-                      }
-                      if (isCurrent) {
-                        return (
-                          <input
-                            key={wIdx}
-                            ref={inputRef}
-                            type="text"
-                            value={userInput}
-                            onChange={handleInputChange}
-                            style={{ width: `${Math.max(word.length, 2)}ch` }}
-                            className="bg-orange-50 border-b-4 border-orange-500 outline-none text-orange-600 text-center animate-pulse"
-                            autoFocus
-                            autoComplete="off"
-                            autoCapitalize="off"
-                            spellCheck="false"
-                          />
-                        );
-                      }
-                      return <span key={wIdx} className="text-slate-200">{"_".repeat(word.length)}</span>;
-                    })}
-                  </span>
+              if (isDone) {
+                return <span key={wIdx} className="text-emerald-600 border-b-2 border-transparent">{word}</span>;
+              }
+              if (isCurrent) {
+                return (
+                  <input
+                    key={wIdx}
+                    ref={inputRef}
+                    type="text"
+                    value={userInput}
+                    onChange={handleInputChange}
+                    style={{ width: `${Math.max(word.length, 3)}ch` }}
+                    className="bg-orange-50 border-b-4 border-orange-500 outline-none text-orange-600 text-center animate-pulse rounded-t-lg"
+                    autoFocus
+                    autoComplete="off"
+                    autoCapitalize="off"
+                    spellCheck="false"
+                  />
                 );
               }
-              return <span key={i} className="text-slate-400 font-medium">{part}</span>;
+              return (
+                <span key={wIdx} className="text-slate-300 border-b-2 border-slate-200">
+                  {"_".repeat(word.length)}
+                </span>
+              );
             })}
           </div>
 
@@ -171,13 +159,13 @@ export const DictationStep: React.FC<DictationStepProps> = ({ script, items, onN
             <div className="space-y-6 animate-in zoom-in duration-300">
               <div className="p-8 bg-emerald-50 rounded-[32px] border-4 border-emerald-100 flex flex-col items-center gap-2">
                 <CheckCircle size={50} className="text-emerald-500 mb-2" />
-                <span className="text-emerald-700 font-black text-2xl">Excellent!</span>
+                <span className="text-emerald-700 font-black text-2xl">Perfect!</span>
               </div>
               <button
                 onClick={handleNextPhrase}
                 className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all flex items-center justify-center gap-3"
               >
-                <span>{currentIndex < items.length - 1 ? 'Next Phrase' : 'Complete Step'}</span>
+                <span>{currentIndex < items.length - 1 ? 'Next Sentence' : 'Complete Step'}</span>
                 <ChevronRight size={24} />
               </button>
             </div>
