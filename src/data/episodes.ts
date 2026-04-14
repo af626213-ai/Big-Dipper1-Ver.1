@@ -1,41 +1,3 @@
-// --- 型定義 ---
-export type QuizQuestion = {
-  q: string;
-  options: string[];
-  ans: string;
-  explanation?: string;
-};
-
-export type KeyPhrase = {
-  phrase: string;
-  explanation: string;
-};
-
-export type VocabQuestion = {
-  word: string;
-  meaning: string;
-  options: string[];
-};
-
-export type Episode = {
-  id: number;
-  title: string;
-  script: string;
-  slash_script?: string;
-  japanese_translation?: string;
-  quizzes: QuizQuestion[];
-  vocab_quizzes: VocabQuestion[];
-  key_phrases: KeyPhrase[];
-  dictation_items: string[];
-  overlappingTips?: string;
-  shadowingTips?: string;
-};
-
-export type CourseData = {
-  course_title: string;
-  episodes: Episode[];
-};
-
 // --- 実データ ---
 export const courseData: CourseData = {
   course_title: "English Navigator",
@@ -46,7 +8,7 @@ export const courseData: CourseData = {
       title: "Ms. Smith's Discovery",
       script: "Ms. Smith, Kenta’s ALT, talks to the class. I first tried wagashi, traditional Japanese sweets, when I was in the United States. I loved the sweet adzuki bean jelly. Americans often have beans in salads or in a tomato sauce. However, we do not usually eat sweet beans. Wagashi artists express the season of the year or something beautiful in nature. They can create a goldfish and a ripple in the water. They can even display the stars of the galaxy. Japanese food culture is amazing.",
       slash_script: "Ms. Smith, / Kenta’s ALT, / talks to the class. / I first tried wagashi, / traditional Japanese sweets, / when I was in the United States. / I loved the sweet adzuki bean jelly. / Americans often have beans / in salads / or in a tomato sauce. / However, / we do not usually eat sweet beans. / Wagashi artists express / the season of the year / or something beautiful in nature. / They can create / a goldfish and a ripple / in the water. / They can even display / the stars of the galaxy. / Japanese food culture is amazing.",
-      japanese_translation: "ミス・スミス（ケンタのALT）が、クラスに話をします。私は初めて和菓子を食べました、日本の伝統的なお菓子（である）、私がアメリカにいた時に。私は甘い小豆ゼリー（羊羹）が大好きでした。アメリカ人はよく豆をサラダやトマトソースの中で食べます。しかし、私たちはふつう甘い豆は食べません。和菓子の職人は季節や自然の中の美しい何かを表現します。彼らは金魚や水の波紋を作ったり、銀河の星々を展示することさえできます。日本の食文化は素晴らしいです。",
+      japanese_translation: "ミス・スミスが / ケンタのALTの / クラスに話をします。 / 私は初めて和菓子を食べました / 日本の伝統的なお菓子である / 私がアメリカにいた時に。 / 私は甘い小豆ゼリー（羊羹）が大好きでした。 / アメリカ人はよく豆を食べます / サラダの中で / あるいはトマトソースの中で。 / しかしながら / 私たちはふつう甘い豆は食べません。 / 和菓子の職人は表現します / その年の季節を / あるいは自然の中の美しい何かを。 / 彼らは作ることができます / 金魚や水の波紋を / 水の中に。 / 彼らは～を展示することさえできます / 銀河の星々を。 / 日本の食文化は素晴らしいです。",
       quizzes: [
         { q: "Where did Ms. Smith first try wagashi?", options: ["In Japan", "In the United States", "In China", "In Europe"], ans: "In the United States", explanation: "The script says she first tried it when she was in the United States." },
         { q: "What do wagashi artists express in their work?", options: ["Modern buildings", "Seasons and nature", "Sports", "Western history"], ans: "Seasons and nature", explanation: "They express the season of the year or something beautiful in nature." }
@@ -69,7 +31,7 @@ export const courseData: CourseData = {
       title: "The Origin of Wagashi",
       script: "Now, Kenta, a tea ceremony club member, will tell us about the history of wagashi. Kenta talks about the history of wagashi. In the Jomon period, people ate fruits and nuts. They are the origin of wagashi. Later, people made mochi and dumplings from rice. In the Nara period, various cooking techniques came to Japan from China. In the Muromachi period, kasutera sponge cake and kompeito came to Japan from Europe. However, sugar was expensive.",
       slash_script: "Now, Kenta, / a tea ceremony club member, / will tell us / about the history of wagashi. / Kenta talks / about the history of wagashi. / In the Jomon period, / people ate fruits and nuts. / They are the origin of wagashi. / Later, / people made mochi and dumplings / from rice. / In the Nara period, / various cooking techniques / came to Japan from China. / In the Muromachi period, / kasutera sponge cake and kompeito / came to Japan from Europe. / However, / sugar was expensive.",
-      japanese_translation: "茶道部員のケンタが和菓子の歴史を話します。縄文時代、人々は果物やナッツを食べており、それが和菓子の起源です。その後、米から餅や団子が作られました。奈良時代には中国から調理技術が伝わり、室町時代にはヨーロッパからカステラや金平糖が伝わりました。しかし当時は砂糖は高価でした。",
+      japanese_translation: "さて、ケンタが / 茶道部の部員である / 私たちに話してくれます / 和菓子の歴史について。 / ケンタは話をします / 和菓子の歴史について。 / 縄文時代には / 人々は果物やナッツを食べていました。 / それらが和菓子の起源です。 / その後 / 人々は餅や団子を作りました / 米から。 / 奈良時代には / 様々な調理技術が / 中国から日本に伝わりました。 / 室町時代には / カステラや金平糖が / ヨーロッパから日本に伝わりました。 / しかしながら / 砂糖は高価でした。",
       quizzes: [
         { q: "What was the origin of wagashi in the Jomon period?", options: ["Rice cakes", "Fruits and nuts", "Sugar", "Chocolate"], ans: "Fruits and nuts", explanation: "The text states fruits and nuts are the origin of wagashi." },
         { q: "Where did cooking techniques come from in the Nara period?", options: ["Europe", "The United States", "China", "India"], ans: "China", explanation: "Various cooking techniques came to Japan from China during the Nara period." }
@@ -92,7 +54,7 @@ export const courseData: CourseData = {
       title: "Modern Wagashi and SNS",
       script: "In the Edo period, sugar spread widely in Japan. People enjoyed sweets like today’s beautiful wagashi during tea ceremonies. As you know, most young people prefer Western sweets to wagashi. These days, however, many young people post pictures of their favorite wagashi on social media. I have posted lots of pictures, too. We are rediscovering Japanese culture. Ms. Smith introduces an easy recipe for strawberry mochi.",
       slash_script: "In the Edo period, / sugar spread widely in Japan. / People enjoyed sweets / like today’s beautiful wagashi / during tea ceremonies. / As you know, / most young people / prefer Western sweets to wagashi. / These days, however, / many young people / post pictures / of their favorite wagashi / on social media. / I have posted lots of pictures, too. / We are rediscovering Japanese culture. / Ms. Smith introduces / an easy recipe / for strawberry mochi.",
-      japanese_translation: "江戸時代、砂糖が日本中に広まり、人々は茶会で和菓子を楽しみました。多くの若者は和菓子より洋菓子を好みますが、最近ではSNSにお気に入りの和菓子の写真を投稿する若者が増えています。私たちは日本文化を再発見しているのです。次に、スミス先生がいちご大福のレシピを紹介します。",
+      japanese_translation: "江戸時代に / 砂糖が日本中に広く普及しました。 / 人々はお菓子を楽しみました / 今日のような美しい和菓子のような / 茶会の間に。 / ご存知の通り / ほとんどの若者は / 和菓子より洋菓子を好みます。 / 近頃は、しかしながら / 多くの若者が / 写真を投稿します / お気に入りの和菓子の / SNSに。 / 私もたくさんの写真を投稿しました。 / 私たちは日本の文化を再発見しているのです。 / ミス・スミスが紹介します / 簡単なレシピを / いちご大福の。",
       quizzes: [
         { q: "When did sugar spread widely in Japan?", options: ["Jomon period", "Nara period", "Edo period", "Muromachi period"], ans: "Edo period", explanation: "The script says sugar spread widely in Japan during the Edo period." },
         { q: "What do many young people do on social media these days?", options: ["Write poems", "Post pictures of wagashi", "Make mochi", "Sell sugar"], ans: "Post pictures of wagashi", explanation: "The text mentions many young people post pictures of their favorite wagashi." }
@@ -115,7 +77,7 @@ export const courseData: CourseData = {
       title: "Easy Strawberry Mochi Recipe",
       script: "Wash the strawberries and remove the hulls. Divide the bean paste into 8 pieces. Cover each strawberry with a piece of bean paste. Put the refined rice flour, sugar, and water in a heat-resistant bowl and mix them well. Heat the mixture in a microwave oven for 2 minutes. Then mix it well. Repeat this until the mixture turns to mochi. Put potato starch on your hands and tear the mochi into 8 pieces. Wrap each strawberry with a piece of mochi.",
       slash_script: "Wash the strawberries / and remove the hulls. / Divide the bean paste / into 8 pieces. / Cover each strawberry / with a piece of bean paste. / Put the refined rice flour, sugar, and water / in a heat-resistant bowl / and mix them well. / Heat the mixture / in a microwave oven / for 2 minutes. / Then mix it well. / Repeat this / until the mixture turns to mochi. / Put potato starch on your hands / and tear the mochi / into 8 pieces. / Wrap each strawberry / with a piece of mochi.",
-      japanese_translation: "いちごを洗ってヘタを取ります。あんこを8等分し、いちごを包みます。耐熱ボウルに白玉粉、砂糖、水を入れ混ぜ、レンジで2分加熱して混ぜます。これを餅になるまで繰り返し、手に片栗粉をつけて8等分にします。最後にあんこで包んだいちごを餅で包めば完成です。",
+      japanese_translation: "いちごを洗って / ヘタを取りなさい。 / あんこを分けなさい / 8つの塊に。 / それぞれのいちごを包みなさい / あんこの塊で。 / 白玉粉、砂糖、そして水を入れなさい / 耐熱ボウルの中に / そしてそれらをよく混ぜなさい。 / その混合物を加熱しなさい / 電子レンジで / 2分間。 / それからよく混ぜなさい。 / これを繰り返しなさい / その混合物が餅になるまで。 / 手に片栗粉をつけなさい / そして餅をちぎりなさい / 8つの塊に。 / それぞれのいちごを包みなさい / 餅の塊で。",
       quizzes: [
         { q: "How long should you heat the mixture in the microwave first?", options: ["1 minute", "2 minutes", "5 minutes", "10 minutes"], ans: "2 minutes", explanation: "The instructions say to heat it for 2 minutes." },
         { q: "What should you put on your hands before tearing the mochi?", options: ["Sugar", "Water", "Potato starch", "Bean paste"], ans: "Potato starch", explanation: "The recipe says to put potato starch on your hands to prevent sticking." }
@@ -139,7 +101,7 @@ export const courseData: CourseData = {
       title: "The Evolution of Phones",
       script: "The history of the telephone begins in the 1870s. Alexander Graham Bell invented the telephone to carry the human voice over long distances. It gradually spread around the world. By the 1970s, there was a telephone in most homes in Japan. However, it was a fixed-line phone, so you could not carry it around. It was not convenient if you wanted to talk in private. In 1979, car telephones appeared. People could use them inside their cars. Later models had batteries, and people could also use them outside their cars. However, they were heavy and expensive.",
       slash_script: "The history of the telephone / begins in the 1870s. / Alexander Graham Bell invented the telephone / to carry the human voice / over long distances. / It gradually spread / around the world. / By the 1970s, / there was a telephone / in most homes in Japan. / However, / it was a fixed-line phone, / so you could not carry it around. / It was not convenient / if you wanted to talk in private. / In 1979, / car telephones appeared. / People could use them / inside their cars. / Later models had batteries, / and people could also use them / outside their cars. / However, / they were heavy and expensive.",
-      japanese_translation: "電話の歴史は1870年代に始まり、ベルは遠距離に声を届けるために電話を発明しました。1970年代の日本には多くの家庭に電話がありましたが、固定電話だったため持ち運びはできず、不便でした。1979年に登場した自動車電話は車内外で使えましたが、重くて高価でした。",
+      japanese_translation: "電話の歴史は / 1870年代に始まります。 / グラハム・ベルは電話を発明しました / 人の声を運ぶために / 長い距離を越えて。 / それは徐々に広がりました / 世界中に。 / 1970年代までには / 電話がありました / 日本のほとんどの家庭に。 / しかしながら / それは固定電話でした / だから持ち運ぶことはできませんでした。 / それは不便でした / もしプライバシーを守って話したければ。 / 1979年に / 自動車電話が登場しました。 / 人々はそれらを使うことができました / 車の中で。 / 後のモデルは電池を備えていました / そして人々はそれらを使うこともできました / 車の外でも。 / しかしながら / それらは重くて高価でした。",
       quizzes: [
         { q: "Why did Bell invent the telephone?", options: ["To play music", "To carry voice", "To take pictures", "To use the Internet"], ans: "To carry voice", explanation: "Bell wanted to carry the human voice over long distances." },
         { q: "What was the problem with early mobile phones?", options: ["Small", "Quiet", "Heavy and expensive", "No colors"], ans: "Heavy and expensive", explanation: "The text says they were heavy and expensive." }
@@ -162,7 +124,7 @@ export const courseData: CourseData = {
       title: "The Rise of Smartphones",
       script: "In 1987, mobile phones appeared. People could easily carry them around. Then, in the 1990s, smartphones appeared. They spread quickly in the 2010s. Smartphones with an Internet connection are convenient. Through the Internet, you can join remote classes. You can play online games and watch videos. You can also pay for goods and services. However, a serious problem has arisen. While high school students spent an average of 192 minutes a day on their smartphones in 2015, this increased to 345 minutes in 2022. Many students feel that they can never turn their phones off.",
       slash_script: "In 1987, / mobile phones appeared. / People could easily / carry them around. / Then, / in the 1990s, / smartphones appeared. / They spread quickly / in the 2010s. / Smartphones / with an Internet connection / are convenient. / Through the Internet, / you can join remote classes. / You can play online games / and watch videos. / You can also pay / for goods and services. / However, / a serious problem has arisen. / While high school students / spent an average of 192 minutes / a day / on their smartphones in 2015, / this increased to 345 minutes / in 2022. / Many students feel / that they can never / turn their phones off.",
-      japanese_translation: "1987年に携帯電話が登場し、2010年代にはスマホが急速に普及しました。スマホは便利ですが、深刻な問題も起きています。高校生の1日の平均使用時間は2015年の192分から2022年には345分に増え、スマホを手放せないと感じる生徒が増えています。",
+      japanese_translation: "1987年に / 携帯電話が登場しました。 / 人々は簡単に / それらを持ち運ぶことができました。 / その後 / 1990年代に / スマートフォンが登場しました。 / それらは急速に普及しました / 2010年代に。 / スマートフォンは / インターネット接続のある / 便利です。 / インターネットを通じて / リモート授業に参加できます。 / オンラインゲームをしたり / 動画を見たりできます。 / 支払いをすることもできます / 商品やサービスに対して。 / しかしながら / 深刻な問題が生じています。 / 高校生が費やす一方で / 1日平均192分を / 1日に / 2015年にスマートフォンに / これは345分に増加しました / 2022年には。 / 多くの生徒が感じています / 決して～できないと / スマートフォンの電源を切ることが（できないと）。",
       quizzes: [
         { q: "How many minutes did students spend in 2022?", options: ["192", "345", "100", "500"], ans: "345", explanation: "The average time increased to 345 minutes in 2022." },
         { q: "What is a merit of smartphones?", options: ["Heavy", "Remote classes", "Turning off", "Losing time"], ans: "Remote classes", explanation: "You can join remote classes through the Internet." }
@@ -185,7 +147,7 @@ export const courseData: CourseData = {
       title: "Digital Detox Advice (1 & 2)",
       script: "Some experts say that young people should spend a few days without smartphones. This period of “digital detox” will refresh them mentally and physically. 1. Have some time away from your smartphone. Stop using your smartphone when you have a meal, when you go to bed, or simply between 8:00 p.m. and 10:00 p.m. 2. Go outside. Go to a movie theater instead of watching a video online. Play soccer outdoors with a real ball rather than indoors with an online game.",
       slash_script: "Some experts say / that young people should spend / a few days / without smartphones. / This period / of “digital detox” / will refresh them / mentally and physically. / 1. Have some time away / from your smartphone. / Stop using your smartphone / when you have a meal, / when you go to bed, / or simply / between 8:00 p.m. and 10:00 p.m. / 2. Go outside. / Go to a movie theater / instead of watching a video online. / Play soccer outdoors / with a real ball / rather than indoors / with an online game.",
-      japanese_translation: "専門家は「デジタルデトックス」を勧めています。1.食事中や就寝前、あるいは午後8時から10時の間はスマホから離れましょう。2.動画を観る代わりに映画館へ行ったり、外で本物のボールを使ってサッカーをしたりしましょう。",
+      japanese_translation: "専門家は言っています / 若者は過ごすべきだと / 数日間を / スマートフォンなしで。 / この期間は / 「デジタルデトックス」の / 彼らをリフレッシュさせるでしょう / 精神的にも肉体的にも。 / 1. 少しの間離れなさい / スマートフォンから。 / スマートフォンを使うのをやめなさい / 食事をする時 / 寝る時 / あるいは単に / 午後8時から10時の間。 / 2. 外に出なさい。 / 映画館に行きなさい / オンラインで動画を見る代わりに。 / 外でサッカーをしなさい / 本物のボールを使って / 屋内でオンラインゲームをするよりも。",
       quizzes: [
         { q: "When should you stop using your smartphone?", options: ["Sleep only", "Meals and bed time", "Morning", "Never"], ans: "Meals and bed time", explanation: "Stop using it during meals or when you go to bed." },
         { q: "What is an outdoor alternative?", options: ["Watching TV", "Sleeping", "Soccer with a real ball", "Online classes"], ans: "Soccer with a real ball", explanation: "Play soccer outdoors with a real ball instead of indoors." }
@@ -208,7 +170,7 @@ export const courseData: CourseData = {
       title: "Support and Goal Setting",
       script: "3. Find some support. Tell your family and friends about your digital detox. With their help, you can achieve your goal. You are not alone. 4. Take it easy. Even if you can’t reach your goal, don’t feel disappointed. Revise your plan and start again. You can do it! Yui thinks that starting a digital detox is a good idea. She wants to use her time more effectively for her studies and hobbies. She hopes to feel more refreshed and focused in her daily life.",
       slash_script: "3. Find some support. / Tell your family and friends / about your digital detox. / With their help, / you can achieve your goal. / You are not alone. / 4. Take it easy. / Even if / you can’t reach your goal, / don’t feel disappointed. / Revise your plan / and start again. / You can do it! / Yui thinks / that starting a digital detox / is a good idea. / She wants to use / her time more effectively / for her studies and hobbies. / She hopes to feel / more refreshed and focused / in her daily life.",
-      japanese_translation: "3.家族や友人に計画を伝え、助け合いましょう。4.たとえ目標に届かなくても、がっかりせず計画を見直して再開すれば大丈夫です。ユイもデトックスは良い考えだと思い、勉強や趣味に時間をもっと有効に使いたいと考えています。",
+      japanese_translation: "3. サポーターを見つけなさい。 / 家族や友人に話しなさい / あなたのデジタルデトックスについて。 / 彼らの助けがあれば / あなたは目標を達成できます。 / あなたは一人ではありません。 / 4. 気楽にやりなさい。 / たとえ～だとしても / 目標に届かなくても / がっかりしないでください。 / 計画を修正して / また始めなさい。 / あなたならできます！ / ユイは考えています / デジタルデトックスを始めることは / 良い考えだと。 / 彼女は時間を使いたいと思っています / より効果的に / 勉強や趣味のために。 / 彼女は感じることを望んでいます / よりリフレッシュして集中していると / 日常生活の中で。",
       quizzes: [
         { q: "What if you fail?", options: ["Give up", "Cry", "Revise and start again", "Delete phone"], ans: "Revise and start again", explanation: "Revise your plan and start again without feeling disappointed." },
         { q: "Why detox?", options: ["New phone", "Effectively for studies", "Play games", "Sleep"], ans: "Effectively for studies", explanation: "She wants to use time effectively for studies and hobbies." }
@@ -221,8 +183,8 @@ export const courseData: CourseData = {
         { word: "focused", meaning: "集中した", options: ["集中した", "疲れた", "混乱した", "眠い"] }
       ],
       key_phrases: [
-        { phrase: "with their help", explanation: "「彼らの助けがあれば」。周囲のサポートの重要性。" },
-        { phrase: "even if ~", explanation: "「たとえ～だとしても」。条件付きの励まし。" }
+        { phrase: "with their help", explanation: "「彼らの助けがあれば」。" },
+        { phrase: "even if ~", explanation: "「たとえ～だとしても」。" }
       ],
       dictation_items: ["achieve your goal you are", "reach your goal don't feel", "revise your plan and start", "effectively for her studies", "refreshed and focused in her"]
     },
@@ -232,7 +194,7 @@ export const courseData: CourseData = {
       title: "Bosses vs. Leaders",
       script: "Both monkeys and gorillas live in groups. However, the groups’ organizations are quite different. A group of monkeys is ruled by a male monkey. As the boss of the group, he has absolute power. The boss decides everything and the others just follow his directions. A group of gorillas is also led by a male. However, he is the leader rather than the boss. The leader never threatens the other members. He considers their needs and feelings. He then makes the best decisions for the group. Monkeys depend on power, and gorillas depend on support and love.",
       slash_script: "Both monkeys and gorillas / live in groups. / However, / the groups’ organizations / are quite different. / A group of monkeys / is ruled by a male monkey. / As the boss of the group, / he has absolute power. / The boss decides everything / and the others / just follow his directions. / A group of gorillas / is also led by a male. / However, / he is the leader / rather than the boss. / The leader never threatens / the other members. / He considers / their needs and feelings. / He then makes / the best decisions for the group. / Monkeys depend on power, / and gorillas depend on / support and love.",
-      japanese_translation: "サルとゴリラは組織が異なります。サルのボスは絶対的な力を持ち、みんなは指示に従うだけです。ゴリラもオスに率いられますが、彼はリーダーです。他者を脅さず、メンバーの感情を考慮して決定を下します。サルは力に、ゴリラは支え合いと愛に依存しています。",
+      japanese_translation: "サルとゴリラは両方 / グループで生活しています。 / しかしながら / そのグループの組織は / 全く異なります。 / サルのグループは / オスのサルによって支配されています。 / グループのボスとして / 彼は絶対的な力を持ちます。 / ボスがすべてを決定し / 他のみんなは / ただボスの指示に従うだけです。 / ゴリラのグループもまた / オスに率いられています。 / しかしながら / 彼はリーダーです / ボスというよりはむしろ。 / リーダーは決して脅しません / 他のメンバーを。 / 彼は考慮します / メンバーのニーズや感情を。 / 彼はそれから下します / グループにとって最善の決定を。 / サルは力に依存し / ゴリラは依存しています / 支え合いと愛に。",
       quizzes: [
         { q: "How are monkeys ruled?", options: ["Love", "Power", "Members", "Female"], ans: "Power", explanation: "Monkeys have a boss with absolute power." },
         { q: "What does a leader consider?", options: ["Money", "Food", "Needs and feelings", "Orders"], ans: "Needs and feelings", explanation: "A leader considers the needs and feelings of others." }
@@ -255,7 +217,7 @@ export const courseData: CourseData = {
       title: "Short-term Goals",
       script: "The two kinds of leadership are seen in human society as well. Imagine you are a member of the school brass band. If you need to sell all your concert tickets in three days, you may need a boss. The boss will analyze the situation and give tasks that each member should carry out. When a group has a short-term goal, the boss will do a good job. In this case, fast decisions are more important than long discussions. Everyone needs to know exactly what to do to reach the goal quickly.",
       slash_script: "The two kinds of leadership / are seen in human society / as well. / Imagine / you are a member / of the school brass band. / If you need to sell / all your concert tickets / in three days, / you may need a boss. / The boss will analyze / the situation / and give tasks / that each member should carry out. / When a group / has a short-term goal, / the boss will do a good job. / In this case, / fast decisions are / more important than / long discussions. / Everyone needs to know / exactly what to do / to reach the goal quickly.",
-      japanese_translation: "吹奏楽部で3日以内にチケットを完売させるなら「ボス」が必要です。ボスは状況を分析し、タスクを与えます。短期目標がある場合、長い議論より素早い決断が重要です。全員が何をすべきか正確に知る必要があります。",
+      japanese_translation: "2種類のリーダーシップは / 人間社会でも見られます / 同様に。 / 想像してみてください / あなたが部員だと / 学校の吹奏楽部の。 / もし売る必要があるなら / すべての演奏会のチケットを / 3日以内に / あなたにはボスが必要かもしれません。 / ボスは状況を分析し / 各員が実行すべき / 課題を与えます。 / グループが持っているとき / 短期目標を / ボスは良い仕事をします。 / この場合 / 素早い決断は / より重要です / 長い議論よりも。 / 全員が知る必要があります / 正確に何をすべきかを / 目標に素早く到達するために。",
       quizzes: [
         { q: "When is a 'boss' effective?", options: ["Happy", "Short-term goal", "Long practice", "No goal"], ans: "Short-term goal", explanation: "The boss is good when a group has a short-term goal." },
         { q: "What is more important here?", options: ["Discussion", "Fast decisions", "Music", "Sleeping"], ans: "Fast decisions", explanation: "Fast decisions are more important than long discussions." }
@@ -278,7 +240,7 @@ export const courseData: CourseData = {
       title: "Long-term Goals",
       script: "Now imagine you want to perform well in the next year’s concert. You may need a leader who creates an atmosphere of cooperation. With such a leader, you can keep your motivation to practice hard. When a group has a long-term goal, the leader will do a good job. A leader focuses on building trust among members. This helps people feel happy and comfortable in the group. In the long run, this type of leadership builds a stronger team that can overcome difficult challenges together.",
       slash_script: "Now imagine / you want to perform well / in the next year’s concert. / You may need a leader / who creates / an atmosphere of cooperation. / With such a leader, / you can keep / your motivation / to practice hard. / When a group / has a long-term goal, / the leader will do a good job. / A leader focuses / on building trust / among members. / This helps people / feel happy and comfortable / in the group. / In the long run, / this type of leadership / builds a stronger team / that can overcome / difficult challenges together.",
-      japanese_translation: "来年の演奏会を目指すなら「リーダー」が必要です。協力的な雰囲気を作り、モチベーションを維持させます。長期目標がある場合、リーダーは信頼構築に集中し、みんなが幸せに過ごせるようにします。長い目で見れば強いチームを作ります。",
+      japanese_translation: "さて想像してください / あなたが上手く演奏したいと / 来年の演奏会で。 / あなたにはリーダーが必要かもしれません / 作り出す / 協力的な雰囲気を。 / そのようなリーダーがいれば / あなたは維持できます / モチベーションを / 一生懸命練習するための。 / グループが持っているとき / 長期目標を / リーダーは良い仕事をします。 / リーダーは焦点を当てます / 信頼構築に / メンバーの間で。 / これは人々を助けます / 幸せで快適に感じるのを / グループの中で。 / 長い目で見れば / このリーダーシップは / より強いチームを作ります / 乗り越えることができる / 困難な課題を一緒に。",
       quizzes: [
         { q: "What does a leader build?", options: ["Tickets", "Power", "Trust", "Money"], ans: "Trust", explanation: "A leader focuses on building trust among members." },
         { q: "When is a 'leader' effective?", options: ["Short", "Long-term goals", "3 days", "Selling"], ans: "Long-term goals", explanation: "The leader is good when a group has a long-term goal." }
@@ -301,7 +263,7 @@ export const courseData: CourseData = {
       title: "Leadership Checklist",
       script: "Hina and John find a checklist for good leadership. If you lead a group, you set clear group goals and share them with members. You give each member a task. You consider members’ opinions when you set the group goals. You have good manners and try to be a role model. You have a strong will when members disagree with you. You talk directly with each member and listen to members’ criticisms. You make members happy and trust your group’s members. How good is your leadership? Try to find your own style!",
       slash_script: "Hina and John find / a checklist / for good leadership. / If you lead a group, / you set clear group goals / and share them with members. / You give each member / a task. / You consider / members’ opinions / when you set the group goals. / You have good manners / and try to be a role model. / You have a strong will / when members / disagree with you. / You talk directly / with each member / and listen to / members’ criticisms. / You make members happy / and trust / your group’s members. / How good is / your leadership? / Try to find / your own style!",
-      japanese_translation: "リーダーは明確な目標を共有し、タスクを与えます。意見を聞き、お手本になり、反対されても強い意志を持ちます。直接対話し、批判も聞き、メンバーを信頼します。あなたのスタイルを見つけましょう！",
+      japanese_translation: "ヒナとジョンは～を見つけます / チェックリストを / 良いリーダーシップのための。 / もしあなたがグループを率いるなら / あなたは明確な目標を設定し / それらをメンバーと共有します。 / あなたは各員に / 課題を与えます。 / あなたは考慮します / メンバーの意見を / グループの目標を設定するとき。 / あなたは良いマナーを持ちます / そしてお手本になろうと努めます。 / あなたは強い意志を持ちます / メンバーが / あなたに反対するとき。 / あなたは直接対話します / 各メンバーと / そして耳を傾けます / メンバーの批判に。 / あなたはメンバーを幸せにし / 信頼します / あなたのグループのメンバーを。 / どれくらい良いですか / あなたのリーダーシップは。 / 見つけてみてください / あなた自身のスタイルを！",
       quizzes: [
         { q: "What should you do?", options: ["Secret", "Share goals", "Change hourly", "Ignore"], ans: "Share goals", explanation: "You should set clear goals and share them." },
         { q: "What should you listen to?", options: ["Music", "Criticisms", "No one", "Noise"], ans: "Criticisms", explanation: "You should listen to members' criticisms." }
