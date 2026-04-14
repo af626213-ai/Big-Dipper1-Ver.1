@@ -256,4 +256,113 @@ export const courseData: CourseData = {
       shadowingTips: "【コツ】'effectively' の語尾の '-ly' まで丁寧に発音を追いかけてみてください。"
     }
   ] // ← ここで episodes 配列を閉じる
-}; // ← ここで courseData オブジェクト全体を閉じる
+},
+// --- Lesson 3 - Episode 1: Bosses vs. Leaders ---
+    {
+      id: 9,
+      title: "Bosses vs. Leaders",
+      script: "Both monkeys and gorillas live in groups. However, the groups’ organizations are quite different. A group of monkeys is ruled by a male monkey. As the boss of the group, he has absolute power. The boss decides everything and the others just follow his directions. A group of gorillas is also led by a male. However, he is the leader rather than the boss. The leader never threatens the other members. He considers their needs and feelings. He then makes the best decisions for the group. Monkeys depend on power, and gorillas depend on support and love.",
+      slash_script: "Both monkeys and gorillas / live in groups. / However, / the groups’ organizations / are quite different. / A group of monkeys / is ruled by a male monkey. / As the boss of the group, / he has absolute power. / The boss decides everything / and the others / just follow his directions. / A group of gorillas / is also led by a male. / However, / he is the leader / rather than the boss. / The leader never threatens / the other members. / He considers / their needs and feelings. / He then makes / the best decisions for the group. / Monkeys depend on power, / and gorillas depend on / support and love.",
+      japanese_translation: "サルとゴリラの両方が / グループで生活しています。 / しかしながら、 / そのグループの組織は / 全く異なっています。 / サルのグループは / オスのサルによって支配されています。 / グループの「ボス」として、 / 彼は絶対的な力を持っています。 / ボスがすべてを決定し、 / 他の者たちは / ただ彼の指示に従います。 / ゴリラのグループもまた / オスによって率いられています。 / しかしながら、 / 彼は「リーダー」です / ボスというよりはむしろ。 / リーダーは決して脅しません / 他のメンバーを。 / 彼は考慮します / 彼らの必要としていることや感情を。 / 彼はそれから下します / グループにとって最善の決定を。 / サルは力に依存し、 / ゴリラは依存しているのです / 支え合いと愛情に。",
+      quizzes: [
+        { q: "How is a group of monkeys ruled?", options: ["By support and love", "By a male boss with absolute power", "By all members together", "By a female leader"], ans: "By a male boss with absolute power", explanation: "The text says a male monkey has absolute power as the boss." },
+        { q: "What is the difference between a boss and a leader in this text?", options: ["The boss is stronger", "The leader considers members' feelings", "The boss lives alone", "There is no difference"], ans: "The leader considers members' feelings", explanation: "Unlike a boss, a leader considers the needs and feelings of other members." }
+      ],
+      vocab_quizzes: [
+        { word: "organization", meaning: "組織", options: ["組織", "場所", "道具", "理由"] },
+        { word: "absolute", meaning: "絶対的な", options: ["一時的な", "絶対的な", "弱い", "部分的な"] },
+        { word: "direction", meaning: "指示", options: ["指示", "練習", "会話", "質問"] },
+        { word: "threaten", meaning: "〜を脅す", options: ["〜を助ける", "〜を褒める", "〜を脅す", "〜を笑う"] },
+        { word: "consider", meaning: "〜を考慮する", options: ["〜を無視する", "〜を考慮する", "〜を忘れる", "〜を壊す"] }
+      ],
+      key_phrases: [
+        { phrase: "rather than ~", explanation: "「～というよりはむしろ」。2つのものを対比させる時に使います。" },
+        { phrase: "depend on ~", explanation: "「～に依存する／～次第である」。何に基づいているかを表す重要な表現です。" }
+      ],
+      dictation_items: ["groups organizations are quite different", "decides everything and the others", "follow his directions", "leader rather than the boss", "consider their needs and feelings"],
+      overlappingTips: "【コツ】'Boss'（支配）と 'Leader'（共感）の対比を意識して、声のトーンを変えてみましょう。",
+      shadowingTips: "【コツ】'absolute' や 'threatens' など、強い意味を持つ単語のアクセントを強調してください。"
+    },
+
+    // --- Lesson 3 - Episode 2: Short-term Goals ---
+    {
+      id: 10,
+      title: "Short-term Goals",
+      script: "The two kinds of leadership are seen in human society as well. Imagine you are a member of the school brass band. If you need to sell all your concert tickets in three days, you may need a boss. The boss will analyze the situation and give tasks that each member should carry out. When a group has a short-term goal, the boss will do a good job. In this case, fast decisions are more important than long discussions. Everyone needs to know exactly what to do to reach the goal quickly.",
+      slash_script: "The two kinds of leadership / are seen in human society / as well. / Imagine / you are a member / of the school brass band. / If you need to sell / all your concert tickets / in three days, / you may need a boss. / The boss will analyze / the situation / and give tasks / that each member should carry out. / When a group / has a short-term goal, / the boss will do a good job. / In this case, / fast decisions are / more important than / long discussions. / Everyone needs to know / exactly what to do / to reach the goal quickly.",
+      japanese_translation: "これら2種類のリーダーシップは / 人間社会でも見られます / 同様に。 / 想像してみてください / あなたが吹奏楽部の部員だと。 / もし売る必要があるなら / すべての演奏会のチケットを / 3日以内に、 / あなたにはボスが必要かもしれません。 / ボスは分析するでしょう / 状況を / そして課題を与えます / 各メンバーが実行すべき。 / グループが持っている時、 / 短期的な目標を、 / ボスは良い仕事をするでしょう。 / この場合、 / 素早い決定は / ～より重要です / 長い議論（より）。 / 全員が知る必要があります / 正確に何をすべきかを / 目標に素早く到達するために。",
+      quizzes: [
+        { q: "When is a 'boss' type of leadership useful?", options: ["For long-term goals", "For short-term goals", "When everyone is lazy", "For making friends"], ans: "For short-term goals", explanation: "A boss is effective when a group needs to achieve a goal in a short period." },
+        { q: "What does a boss do for the members?", options: ["Listens to their music", "Analyzes the situation and gives tasks", "Plays the trumpet", "Takes all the tickets"], ans: "Analyzes the situation and gives tasks", explanation: "The boss organizes the group by assigning specific tasks to reach a quick goal." }
+      ],
+      vocab_quizzes: [
+        { word: "society", meaning: "社会", options: ["学校", "社会", "家族", "会社"] },
+        { word: "analyze", meaning: "〜を分析する", options: ["〜を分析する", "〜を捨てる", "〜を運ぶ", "〜を隠す"] },
+        { word: "carry out", meaning: "〜を実行する", options: ["〜を外に運ぶ", "〜を中止する", "〜を実行する", "〜を練習する"] },
+        { word: "short-term", meaning: "短期的な", options: ["短期的な", "長期的な", "個人的な", "公式な"] },
+        { word: "exactly", meaning: "正確に", options: ["正確に", "大体", "時々", "たぶん"] }
+      ],
+      key_phrases: [
+        { phrase: "carry out ~", explanation: "「～を実行する／遂行する」。計画や任務をやり遂げる時に使います。" },
+        { phrase: "as well", explanation: "「～もまた同様に」。文末に置いて too と同じように使われます。" }
+      ],
+      dictation_items: ["seen in human society as well", "sell all your concert tickets", "analyze the situation and give", "member should carry out", "exactly what to do to reach"],
+      overlappingTips: "【コツ】'If you need to sell...' の部分は、切迫感を持たせて少し早口で読んでみましょう。",
+      shadowingTips: "【コツ】'analyze' [ǽnəlàiz] の最初の母音をしっかり開いて発音しましょう。"
+    },
+
+    // --- Lesson 3 - Episode 3: Long-term Goals ---
+    {
+      id: 11,
+      title: "Long-term Goals",
+      script: "Now imagine you want to perform well in the next year’s concert. You may need a leader who creates an atmosphere of cooperation. With such a leader, you can keep your motivation to practice hard. When a group has a long-term goal, the leader will do a good job. A leader focuses on building trust among members. This helps people feel happy and comfortable in the group. In the long run, this type of leadership builds a stronger team that can overcome difficult challenges together.",
+      slash_script: "Now imagine / you want to perform well / in the next year’s concert. / You may need a leader / who creates / an atmosphere of cooperation. / With such a leader, / you can keep / your motivation / to practice hard. / When a group / has a long-term goal, / the leader will do a good job. / A leader focuses / on building trust / among members. / This helps people / feel happy and comfortable / in the group. / In the long run, / this type of leadership / builds a stronger team / that can overcome / difficult challenges together.",
+      japanese_translation: "さて、想像してください / あなたが上手く演奏したいと / 来年のコンサートで。 / あなたにはリーダーが必要かもしれません / 作り出す（リーダーが） / 協力の雰囲気を。 / そのようなリーダーがいれば、 / あなたは維持できます / モチベーションを / 一生懸命練習するための。 / グループが持っている時、 / 長期的な目標を、 / リーダーは良い仕事をするでしょう。 / リーダーは焦点を当てます / 信頼を築くことに / メンバーの間で。 / これは人々を助けます / 幸せで快適に感じる（のを） / グループの中で。 / 長い目で見れば、 / このタイプのリーダーシップは / より強いチームを作ります / 乗り越えることができる（チームを） / 困難な課題を一緒に。",
+      quizzes: [
+        { q: "What kind of atmosphere does a leader create?", options: ["An atmosphere of fear", "An atmosphere of cooperation", "A very quiet atmosphere", "A stressful atmosphere"], ans: "An atmosphere of cooperation", explanation: "A leader builds an environment where everyone works together." },
+        { q: "What is the benefit of having a leader for long-term goals?", options: ["You can finish in three days", "You can keep your motivation", "You don't have to practice", "You can sell tickets"], ans: "You can keep your motivation", explanation: "A leader helps members stay motivated over a long period of time." }
+      ],
+      vocab_quizzes: [
+        { word: "perform", meaning: "演奏する・行う", options: ["聴く", "演奏する・行う", "休む", "準備する"] },
+        { word: "atmosphere", meaning: "雰囲気", options: ["空気", "雰囲気", "場所", "結果"] },
+        { word: "cooperation", meaning: "協力", options: ["競争", "協力", "沈黙", "反対"] },
+        { word: "trust", meaning: "信頼", options: ["疑い", "恐怖", "信頼", "命令"] },
+        { word: "overcome", meaning: "〜を乗り越える", options: ["〜を乗り越える", "〜を諦める", "〜を避ける", "〜を忘れる"] }
+      ],
+      key_phrases: [
+        { phrase: "focus on ~", explanation: "「～に集中する／焦点を当てる」。大切なことに力を注ぐ時の表現です。" },
+        { phrase: "in the long run", explanation: "「長い目で見れば／結局は」。将来的な結果について話す時に使います。" }
+      ],
+      dictation_items: ["atmosphere of cooperation", "keep your motivation to practice", "focuses on building trust", "happy and comfortable in the", "overcome difficult challenges together"],
+      overlappingTips: "【コツ】'motivation' や 'cooperation' など、長い単語のリズムを崩さないように注意しましょう。",
+      shadowingTips: "【コツ】'atmosphere' [ǽtməsfìər] の発音は、カタカナの「アトモスフィア」にならないよう息を混ぜて。"
+    },
+
+    // --- Lesson 3 - Episode 4: Leadership Checklist ---
+    {
+      id: 12,
+      title: "Leadership Checklist",
+      script: "Hina and John find a checklist for good leadership. If you lead a group, you set clear group goals and share them with members. You give each member a task. You consider members’ opinions when you set the group goals. You have good manners and try to be a role model. You have a strong will when members disagree with you. You talk directly with each member and listen to members’ criticisms. You make members happy and trust your group’s members. How good is your leadership? Try to find your own style!",
+      slash_script: "Hina and John find / a checklist / for good leadership. / If you lead a group, / you set clear group goals / and share them with members. / You give each member / a task. / You consider / members’ opinions / when you set the group goals. / You have good manners / and try to be a role model. / You have a strong will / when members / disagree with you. / You talk directly / with each member / and listen to / members’ criticisms. / You make members happy / and trust / your group’s members. / How good is / your leadership? / Try to find / your own style!",
+      japanese_translation: "ヒナとジョンは～を見つけます / チェックリストを / 良いリーダーシップのための。 / もしあなたがグループを率いるなら、 / あなたは明確な目標を立てます / そしてそれらをメンバーと共有します。 / あなたは各メンバーに / 課題を与えます。 / あなたは考慮します / メンバーの意見を / グループの目標を立てる時に。 / あなたは良いマナーを持ちます / そしてロールモデルになろうと努めます。 / あなたは強い意志を持ちます / メンバーが / あなたに反対する時に。 / あなたは直接話します / 各メンバーと / そして耳を傾けます / メンバーの批判に。 / あなたはメンバーを幸せにし / 信頼します / グループのメンバーを。 / あなたのリーダーシップは / どれくらい良いですか？ / 見つけてみてください / あなた自身のスタイルを！",
+      quizzes: [
+        { q: "What should you do with group goals according to the checklist?", options: ["Keep them secret", "Share them with members", "Change them every day", "Forget them"], ans: "Share them with members", explanation: "Clear goals should be set and shared with everyone in the group." },
+        { q: "What should you do when members criticize you?", options: ["Get angry", "Listen to them", "Leave the group", "Point out their mistakes"], ans: "Listen to them", explanation: "The checklist suggests listening to members' criticisms to be a good leader." }
+      ],
+      vocab_quizzes: [
+        { word: "clear", meaning: "明確な", options: ["明確な", "不確かな", "古い", "難しい"] },
+        { word: "role model", meaning: "お手本となる人", options: ["お手本となる人", "悪役", "通行人", "審判"] },
+        { word: "will", meaning: "意志", options: ["未来", "意志", "記憶", "技術"] },
+        { word: "criticism", meaning: "批判", options: ["称賛", "批判", "応援", "沈黙"] },
+        { word: "directly", meaning: "直接的に", options: ["間接的に", "直接的に", "密かに", "大声で"] }
+      ],
+      key_phrases: [
+        { phrase: "disagree with ~", explanation: "「～に反対する」。agree with（～に賛成する）の反対語です。" },
+        { phrase: "listen to ~", explanation: "「～に耳を傾ける」。ただ聞こえるのではなく、意識して聞く時に使います。" }
+      ],
+      dictation_items: ["set clear group goals and", "try to be a role model", "strong will when members", "listen to members criticisms", "trust your group members"],
+      overlappingTips: "【コツ】チェックリストの各項目を、一つずつ指差し確認するようなリズムで読んでください。",
+      shadowingTips: "【コツ】'criticism' [krítəsìzm] の最後の m の音でしっかり口を閉じるようにしましょう。"
+    }
+  ]
+};
