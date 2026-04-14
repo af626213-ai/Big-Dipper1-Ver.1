@@ -38,7 +38,7 @@ export type CourseData = {
 
 // --- 実データ ---
 export const courseData: CourseData = {
-  course_title: "English Navigator - Lesson 1",
+  course_title: "English Navigator",
   episodes: [
     // --- Lesson 1 - Episode 1: Ms. Smith's Discovery ---
     {
@@ -146,10 +146,10 @@ export const courseData: CourseData = {
       dictation_items: ["remove the hulls", "divide the bean paste into", "in a heat resistant bowl", "mixture in a microwave oven", "tear the mochi into eight"],
       overlappingTips: "【コツ】命令文（Wash, Divide, Put...）で始まるので、手順を指示するリズムで読みましょう。",
       shadowingTips: "【コツ】'microwave' [máikrəwèiv] の二重母音とアクセントに注意して追いかけてください。"
-    }
-  ]
-},
-{
+    },
+
+    // --- Lesson 2 - Episode 1: The Evolution of Phones ---
+    {
       id: 5,
       title: "The Evolution of Phones",
       script: "The history of the telephone begins in the 1870s. Alexander Graham Bell invented the telephone to carry the human voice over long distances. It gradually spread around the world. By the 1970s, there was a telephone in most homes in Japan. However, it was a fixed-line phone, so you could not carry it around. It was not convenient if you wanted to talk in private. In 1979, car telephones appeared. People could use them inside their cars. Later models had batteries, and people could also use them outside their cars. However, they were heavy and expensive.",
@@ -255,5 +255,5 @@ export const courseData: CourseData = {
       overlappingTips: "【コツ】'You can do it!' は自分や相手を勇気づけるように明るく力強く発音しましょう。",
       shadowingTips: "【コツ】'effectively' の語尾の '-ly' まで丁寧に発音を追いかけてみてください。"
     }
-  ]
-};
+  ] // ← ここで episodes 配列を閉じる
+}; // ← ここで courseData オブジェクト全体を閉じる
