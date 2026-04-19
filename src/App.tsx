@@ -1,251 +1,133 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Home, Play, CheckCircle, BookOpen, Volume2, Square, Mic, Headphones, Zap } from 'lucide-react';
-import { ListeningStep } from './components/ListeningStep';
-import { QuizStep } from './components/QuizStep';
-import { VocabularyStep } from './components/VocabularyStep';
-import { DictationStep } from './components/DictationStep';
-import { ReadingStep } from './components/ReadingStep';
-import { courseData, Episode, KeyPhrase } from './data/episodes';
-
-const stopSpeech = () => {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
+// --- 型定義 ---
+export type QuizQuestion = {
+  q: string;
+  options: string[];
+  ans: string;
+  explanation?: string;
 };
 
-const KeyPhrasesInternal = ({ items, rate, onNext }: { items: KeyPhrase[], rate: number, onNext: () => void }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const currentItem = items[currentIndex];
-  
-  const handleSpeak = (text: string) => {
-    stopSpeech();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = rate;
-    window.speechSynthesis.speak(u);
-  };
-
-  const handleNext = () => { 
-    if (currentIndex < items.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-    } else {
-      stopSpeech();
-      onNext();
-    }
-  };
-  if (!currentItem) return null;
-  return (
-    <div className="max-w-2xl mx-auto space-y-8 animate-in fade-in duration-500 font-pop text-left">
-      <div className="text-center space-y-2">
-        <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white mb-2 shadow-md"><BookOpen size={32} /></div>
-        <h2 className="text-3xl font-black text-slate-800 text-center">Key Phrases</h2>
-      </div>
-      <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-orange-100 min-h-[250px] flex flex-col justify-center text-center space-y-6 relative">
-        <button onClick={() => handleSpeak(currentItem.phrase)} className="absolute top-4 right-4 p-3 bg-orange-50 text-orange-600 rounded-full hover:bg-orange-100 transition-all">
-          <Volume2 size={20} />
-        </button>
-        <h3 className="text-4xl font-black text-orange-600 tracking-tight">{currentItem.phrase}</h3>
-        <p className="text-xl text-slate-700 leading-relaxed font-bold">{currentItem.explanation}</p>
-      </div>
-      <div className="flex gap-4">
-        <button onClick={() => currentIndex > 0 && setCurrentIndex(c => c - 1)} disabled={currentIndex === 0} className={`flex-1 py-4 rounded-2xl font-bold ${currentIndex === 0 ? 'bg-slate-100 text-slate-300' : 'bg-white text-slate-600 border-2 border-slate-200 hover:border-orange-300'}`}>Back</button>
-        <button onClick={handleNext} className="flex-[2] py-4 bg-orange-500 text-white font-bold rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all">{currentIndex < items.length - 1 ? 'Next Phrase' : 'Start Dictation'}</button>
-      </div>
-    </div>
-  );
+export type KeyPhrase = {
+  phrase: string;
+  explanation: string;
 };
 
-const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: number, onNext: () => void }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const handlePlay = () => {
-    if ('speechSynthesis' in window) {
-      if (isPlaying) { window.speechSynthesis.cancel(); setIsPlaying(false); }
-      else { 
-        stopSpeech();
-        const u = new SpeechSynthesisUtterance(script); u.lang = 'en-US'; 
-        u.rate = rate; 
-        u.onend = () => setIsPlaying(false); window.speechSynthesis.speak(u); setIsPlaying(true); 
-      }
-    }
-  };
-  return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500 font-pop">
-      <div className="text-center space-y-2">
-        <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white mb-2 shadow-md"><Mic size={32} /></div>
-        <h2 className="text-3xl font-black text-slate-800">Step 6: Overlapping</h2>
-        <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-4 mt-4 text-center">
-          <p className="text-sm md:text-base font-bold text-orange-700 leading-relaxed">音声を聴きながらピッタリ重ねて音読しよう！</p>
-        </div>
-      </div>
-      <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-slate-100 relative text-left">
-        <button onClick={handlePlay} className="absolute top-4 right-4 w-14 h-14 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center hover:bg-orange-200 transition-all">
-          {isPlaying ? <Square size={24} /> : <Volume2 size={24} />}
-        </button>
-        <p className="text-2xl text-slate-800 leading-relaxed pr-20 font-bold">{script}</p>
-      </div>
-      <button onClick={() => { stopSpeech(); onNext(); }} className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all">Go to Shadowing</button>
-    </div>
-  );
+export type VocabQuestion = {
+  word: string;
+  meaning: string;
+  options: string[];
 };
 
-const ShadowingInternal = ({ script, rate, onNext }: { script: string, rate: number, onNext: () => void }) => {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const handlePlay = () => {
-    if ('speechSynthesis' in window) {
-      if (isPlaying) { window.speechSynthesis.cancel(); setIsPlaying(false); }
-      else { 
-        stopSpeech();
-        const u = new SpeechSynthesisUtterance(script); u.lang = 'en-US'; 
-        u.rate = rate; 
-        u.onend = () => setIsPlaying(false); window.speechSynthesis.speak(u); setIsPlaying(true); 
-      }
-    }
-  };
-  return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500 font-pop text-center">
-      <div className="space-y-2">
-        <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white mb-2 shadow-md"><Headphones size={32} /></div>
-        <h2 className="text-3xl font-black text-slate-800">Step 7: Shadowing</h2>
-        <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-4 mt-4 max-w-2xl mx-auto text-center">
-          <p className="text-sm md:text-base font-bold text-orange-700 leading-relaxed">音声を影のように追いかけて音読しよう！</p>
-        </div>
-      </div>
-      <div className="bg-white rounded-[32px] p-10 shadow-xl border-4 border-slate-100 flex flex-col items-center gap-6">
-        <button onClick={handlePlay} className="w-28 h-28 bg-orange-500 text-white rounded-full flex items-center justify-center hover:bg-orange-600 shadow-md transform active:scale-95 transition-all">
-          {isPlaying ? <Square size={40} /> : <Volume2 size={40} />}
-        </button>
-      </div>
-      <button onClick={() => { stopSpeech(); onNext(); }} className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all">Complete Episode</button>
-    </div>
-  );
+export type Episode = {
+  id: number;
+  title: string;
+  script: string;
+  slash_script?: string;
+  japanese_translation?: string;
+  quizzes: QuizQuestion[];
+  vocab_quizzes: VocabQuestion[];
+  key_phrases: KeyPhrase[];
+  dictation_items: string[];
 };
 
-// --- ここが修正ポイント: export default に変更 ---
-export default function App() {
-  const [currentStep, setCurrentStep] = useState<'menu' | 'listening' | 'quiz' | 'vocabulary' | 'phrases' | 'dictation' | 'reading' | 'overlapping' | 'shadowing' | 'result'>('menu');
-  const [selectedEpisode, setSelectedEpisode] = useState<Episode>(courseData.episodes[0]);
-  const [isBgmPlaying, setIsBgmPlaying] = useState(false);
-  const [speechRate, setSpeechRate] = useState<number>(1.0);
-  const bgmRef = useRef<HTMLAudioElement | null>(null);
+export type CourseData = {
+  course_title: string;
+  episodes: Episode[];
+};
 
-  useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;900&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-    const style = document.createElement('style');
-    style.textContent = `.font-pop { font-family: 'Kiwi Maru', sans-serif !important; } body { background-color: #f8fafc; }`;
-    document.head.appendChild(style);
-    const audio = new Audio('/bgm.mp3'); audio.loop = true; audio.volume = 0.15; bgmRef.current = audio;
-    return () => { audio.pause(); stopSpeech(); };
-  }, []);
-
-  useEffect(() => {
-    if (currentStep === 'result') {
-      const finishAudio = new Audio('/finish.mp3'); finishAudio.volume = 0.5; finishAudio.play().catch(() => {});
+// --- 実データ ---
+export const courseData: CourseData = {
+  course_title: "English Navigator",
+  episodes: [
+    // --- Lesson 1 (ID: 1-4) ---
+    {
+      id: 1,
+      title: "Ms. Smith's Discovery",
+      script: "Ms. Smith, Kenta’s ALT, talks to the class. I first tried wagashi, traditional Japanese sweets, when I was in the United States. I loved the sweet adzuki bean jelly. Americans often have beans in salads or in a tomato sauce. However, we do not usually eat sweet beans. Wagashi artists express the season of the year or something beautiful in nature. They can create a goldfish and a ripple in the water. They can even display the stars of the galaxy. Japanese food culture is amazing.",
+      slash_script: "Ms. Smith, / Kenta’s ALT, / talks to the class. / I first tried wagashi, / traditional Japanese sweets, / when I was in the United States. / I loved the sweet adzuki bean jelly. / Americans often have beans / in salads / or in a tomato sauce. / However, / we do not usually eat sweet beans. / Wagashi artists express / the season of the year / or something beautiful in nature. / They can create / a goldfish and a ripple / in the water. / They can even display / the stars of the galaxy. / Japanese food culture is amazing.",
+      japanese_translation: "ミス・スミスが / ケンタのALTの / クラスに話をします。 / 私は初めて和菓子を食べました / 日本の伝統的なお菓子である / 私がアメリカにいた時に。 / 私は甘い小豆ゼリー（羊羹）が大好きでした。 / アメリカ人はよく豆を食べます / サラダの中で / あるいはトマトソースの中で。 / しかしながら / 私たちはふつう甘い豆は食べません。 / 和菓子の職人は表現します / その年の季節を / あるいは自然の中の美しい何かを。 / 彼らは作ることができます / 金魚や水の波紋を / 水の中に。 / 彼らは～を展示することさえできます / 銀河の星々を。 / 日本の食文化は素晴らしいです。",
+      quizzes: [
+        { q: "Where did Ms. Smith first try wagashi?", options: ["In Japan", "In the United States", "In China", "In Europe"], ans: "In the United States", explanation: "The script says she first tried it when she was in the United States." },
+        { q: "What do wagashi artists express in their work?", options: ["Modern buildings", "Seasons and nature", "Sports", "Western history"], ans: "Seasons and nature", explanation: "They express the season of the year or something beautiful in nature." }
+      ],
+      vocab_quizzes: [
+        { word: "traditional", meaning: "伝統的な", options: ["伝統的な", "新しい", "珍しい", "簡単な"] },
+        { word: "adzuki bean", meaning: "小豆", options: ["大豆", "小豆", "コーヒー豆", "枝豆"] },
+        { word: "express", meaning: "〜を表現する", options: ["〜を隠す", "〜を表現する", "〜を食べる", "〜を運ぶ"] },
+        { word: "ripple", meaning: "波紋", options: ["波紋", "氷", "泡", "流れ"] },
+        { word: "amazing", meaning: "素晴らしい", options: ["退屈な", "難しい", "素晴らしい", "悲しい"] }
+      ],
+      key_phrases: [
+        { phrase: "when I was in ~", explanation: "「～にいた時」。過去の特定の時期について説明する際に使います。" },
+        { phrase: "not usually ~", explanation: "「ふつうは～しない」。頻度を表す副詞 usually を使った否定文です。" }
+      ],
+      dictation_items: [
+        "tried wagashi traditional Japanese sweets",
+        "often have beans in salads",
+        "express the season of the",
+        "display the stars of the",
+        "Japanese food culture is amazing"
+      ]
+    },
+    // --- Lesson 2 (ID: 5-8) ---
+    {
+      id: 5,
+      title: "The Evolution of Phones",
+      script: "The history of the telephone begins in the 1870s. Alexander Graham Bell invented the telephone to carry the human voice over long distances. It gradually spread around the world. By the 1970s, there was a telephone in most homes in Japan. However, it was a fixed-line phone, so you could not carry it around. It was not convenient if you wanted to talk in private. In 1979, car telephones appeared. People could use them inside their cars. Later models had batteries, and people could also use them outside their cars. However, they were heavy and expensive.",
+      slash_script: "The history of the telephone / begins in the 1870s. / Alexander Graham Bell invented the telephone / to carry the human voice / over long distances. / It gradually spread / around the world. / By the 1970s, / there was a telephone / in most homes in Japan. / However, / it was a fixed-line phone, / so you could not carry it around. / It was not convenient / if you wanted to talk in private. / In 1979, / car telephones appeared. / People could use them / inside their cars. / Later models had batteries, / and people could also use them / outside their cars. / However, / they were heavy and expensive.",
+      japanese_translation: "電話の歴史は / 1870年代に始まります。 / グラハム・ベルは電話を発明しました / 人の声を運ぶために / 長い距離を越えて。 / それは徐々に広がりました / 世界中に。 / 1970年代までには / 電話がありました / 日本のほとんどの家庭に。 / しかしながら / それは固定電話でした / だから持ち運ぶことはできませんでした。 / それは不便でした / もしプライバシーを守って話したければ。 / 1979年に / 自動車電話が登場しました。 / 人々はそれらを使うことができました / 車の中で。 / 後のモデルは電池を備えていました / そして人々はそれらを使うこともできました / 車の外でも。 / しかしながら / それらは重くて高価でした。",
+      quizzes: [
+        { q: "Why did Bell invent the telephone?", options: ["To play music", "To carry voice", "To take pictures", "To use the Internet"], ans: "To carry voice", explanation: "Bell wanted to carry the human voice over long distances." },
+        { q: "What was the problem with early mobile phones?", options: ["Small", "Quiet", "Heavy and expensive", "No colors"], ans: "Heavy and expensive", explanation: "The text says they were heavy and expensive." }
+      ],
+      vocab_quizzes: [
+        { word: "invented", meaning: "発明した", options: ["発明した", "修理した", "壊した", "売った"] },
+        { word: "distance", meaning: "距離", options: ["距離", "速度", "時間", "重量"] },
+        { word: "gradually", meaning: "徐々に", options: ["徐々に", "突然", "すぐに", "決して〜ない"] },
+        { word: "fixed-line", meaning: "固定回線の", options: ["固定回線の", "無線の", "公衆の", "新しい"] },
+        { word: "convenient", meaning: "便利な", options: ["便利な", "難しい", "退屈な", "重い"] }
+      ],
+      key_phrases: [
+        { phrase: "carry A around", explanation: "「Aを持ち歩く」。ポータブルな機器について話す際の必須表現です。" },
+        { phrase: "in private", explanation: "「プライベートで」。他人に聞かれずに話をしたい状況です。" }
+      ],
+      dictation_items: [
+        "carry the human voice over",
+        "gradually spread around the world",
+        "most homes in Japan",
+        "convenient if you wanted to",
+        "they were heavy and expensive"
+      ]
+    },
+    // --- Lesson 3 (ID: 9-12) ---
+    {
+      id: 9,
+      title: "Bosses vs. Leaders",
+      script: "Both monkeys and gorillas live in groups. However, the groups’ organizations are quite different. A group of monkeys is ruled by a male monkey. As the boss of the group, he has absolute power. The boss decides everything and the others just follow his directions. A group of gorillas is also led by a male. However, he is the leader rather than the boss. The leader never threatens the other members. He considers their needs and feelings. He then makes the best decisions for the group. Monkeys depend on power, and gorillas depend on support and love.",
+      slash_script: "Both monkeys and gorillas / live in groups. / However, / the groups’ organizations / are quite different. / A group of monkeys / is ruled by a male monkey. / As the boss of the group, / he has absolute power. / The boss decides everything / and the others / just follow his directions. / A group of gorillas / is also led by a male. / However, / he is the leader / rather than the boss. / The leader never threatens / the other members. / He considers / their needs and feelings. / He then makes / the best decisions for the group. / Monkeys depend on power, / and gorillas depend on / support and love.",
+      japanese_translation: "サルとゴリラは両方 / グループで生活しています。 / しかしながら / そのグループの組織は / 全く異なります。 / サルのグループは / オスのサルによって支配されています。 / グループのボスとして / 彼は絶対的な力を持ちます。 / ボスがすべてを決定し / 他のみんなは / ただボスの指示に従うだけです。 / ゴリラのグループもまた / オスに率いられています。 / しかしながら / 彼はリーダーです / ボスというよりはむしろ。 / リーダーは決して脅しません / 他のメンバーを。 / 彼は考慮します / メンバーのニーズや感情を。 / 彼はそれから下します / グループにとって最善の決定を。 / サルは力に依存し / ゴリラは依存しています / 支え合いと愛に。",
+      quizzes: [
+        { q: "How are monkeys ruled?", options: ["Love", "Power", "Members", "Female"], ans: "Power", explanation: "Monkeys have a boss with absolute power." },
+        { q: "What does a leader consider?", options: ["Money", "Food", "Needs and feelings", "Orders"], ans: "Needs and feelings", explanation: "A leader considers the needs and feelings of others." }
+      ],
+      vocab_quizzes: [
+        { word: "organization", meaning: "組織", options: ["組織", "場所", "道具", "理由"] },
+        { word: "absolute", meaning: "絶対的な", options: ["絶対的な", "弱い", "一時的な", "偽の"] },
+        { word: "direction", meaning: "指示", options: ["指示", "質問", "練習", "会話"] },
+        { word: "threaten", meaning: "脅す", options: ["脅す", "褒める", "助ける", "笑う"] },
+        { word: "consider", meaning: "考慮する", options: ["考慮する", "無視する", "忘れる", "捨てる"] }
+      ],
+      key_phrases: [
+        { phrase: "rather than ~", explanation: "「～よりはむしろ」。" },
+        { phrase: "depend on ~", explanation: "「～に依存する」。" }
+      ],
+      dictation_items: [
+        "groups organizations are quite different",
+        "boss of the group he",
+        "others just follow his directions",
+        "leader rather than the boss",
+        "consider their needs and feelings"
+      ]
     }
-  }, [currentStep]);
-
-  const toggleBgm = () => { 
-    if (!bgmRef.current) return; 
-    isBgmPlaying ? bgmRef.current.pause() : bgmRef.current.play().catch(() => {}); 
-    setIsBgmPlaying(!isBgmPlaying); 
-  };
-
-  const renderLessonSection = (lessonNum: number, startId: number, endId: number) => (
-    <section className="space-y-6 text-left">
-      <div className="flex items-center gap-4 px-2">
-        <h3 className="text-2xl font-black text-slate-800 flex items-center gap-3">
-          <span className="bg-orange-500 text-white px-4 py-1.5 rounded-xl shadow-sm whitespace-nowrap">Lesson {lessonNum}</span>
-        </h3>
-        <div className="h-1 bg-slate-200 flex-1 rounded-full" />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {courseData.episodes.filter(ep => ep.id >= startId && ep.id <= endId).map((ep, idx) => (
-          <div key={ep.id} onClick={() => { stopSpeech(); setSelectedEpisode(ep); setCurrentStep('listening'); }} className="group relative bg-white rounded-[32px] p-6 border-4 border-slate-100 hover:border-orange-400 cursor-pointer transition-all shadow-sm hover:shadow-2xl hover:-translate-y-1 overflow-hidden">
-            <div className="absolute -right-4 -bottom-6 text-9xl font-black text-slate-50 group-hover:text-orange-50 transition-colors pointer-events-none">{idx + 1}</div>
-            <div className="relative z-10 flex items-center gap-5">
-              <div className="w-14 h-14 rounded-2xl bg-orange-500 text-white flex items-center justify-center font-black text-xl shadow-lg group-hover:scale-110 transition-transform">P{idx + 1}</div>
-              <div className="flex-1">
-                <p className="text-xs font-black text-orange-400 uppercase tracking-widest mb-1">Part {idx + 1}</p>
-                <h3 className="text-lg md:text-xl font-black text-slate-800 leading-tight group-hover:text-orange-600 transition-colors">{ep.title}</h3>
-              </div>
-              <Play className="text-slate-300 group-hover:text-orange-500" size={20} fill="currentColor" />
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-
-  return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-pop">
-      <header className="bg-white sticky top-0 z-50 border-b-4 border-slate-100 px-6 py-4 flex justify-between items-center shadow-sm">
-        <button onClick={() => { stopSpeech(); setCurrentStep('menu'); }} className="p-2 bg-slate-100 hover:bg-orange-100 rounded-xl text-slate-800"><Home size={22} /></button>
-        <button onClick={toggleBgm} className={`px-4 py-2 rounded-xl border-2 font-bold text-sm ${isBgmPlaying ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-600 border-slate-200'}`}>{isBgmPlaying ? 'BGM ON' : 'BGM OFF'}</button>
-      </header>
-
-      {currentStep !== 'menu' && currentStep !== 'result' && (
-        <nav className="bg-white border-b-2 border-slate-100 flex justify-center overflow-x-auto px-4">
-          {(['listening', 'quiz', 'vocabulary', 'phrases', 'dictation', 'reading', 'overlapping', 'shadowing'] as const).map((step) => (
-            <button key={step} onClick={() => { stopSpeech(); setCurrentStep(step); }} className={`py-3 px-4 text-[9px] font-black uppercase tracking-widest border-b-4 ${currentStep === step ? 'border-orange-500 text-orange-600' : 'border-transparent text-slate-400'}`}>{step}</button>
-          ))}
-        </nav>
-      )}
-
-      <main className="flex-1 p-6 text-center">
-        <div className="max-w-4xl mx-auto">
-          {currentStep === 'menu' && (
-            <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
-              <div className="text-center py-16 bg-gradient-to-b from-orange-50 to-white rounded-[60px] border-4 border-orange-100 shadow-inner relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-32 h-32 bg-orange-200/20 rounded-full -translate-x-16 -translate-y-16" />
-                <div className="absolute bottom-0 right-0 w-48 h-48 bg-orange-300/10 rounded-full translate-x-20 translate-y-20" />
-                <h1 className="text-sm font-black text-orange-400 uppercase tracking-[0.5em] mb-4 relative z-10">The Ultimate Learning Method</h1>
-                <h2 className="text-6xl md:text-7xl font-black text-orange-700 leading-none tracking-tighter relative z-10">English<br /><span className="text-orange-500">Navigator</span></h2>
-                
-                <div className="mt-8 relative z-10 flex flex-col items-center gap-3">
-                  <div className="bg-white p-1.5 rounded-2xl shadow-md border-2 border-orange-100 flex gap-1">
-                    {[0.6, 0.8, 1.0, 1.1].map((rate) => (
-                      <button
-                        key={rate}
-                        onClick={() => setSpeechRate(rate)}
-                        className={`px-4 py-2 min-w-[50px] rounded-xl font-black text-sm transition-all ${
-                          speechRate === rate ? 'bg-orange-500 text-white' : 'text-slate-400 hover:bg-orange-50'
-                        }`}
-                      >
-                        {rate.toFixed(1)}x
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="space-y-16">
-                {renderLessonSection(1, 1, 4)}
-                {renderLessonSection(2, 5, 8)}
-                {renderLessonSection(3, 9, 12)}
-              </div>
-            </div>
-          )}
-
-          {currentStep === 'listening' && <ListeningStep script={selectedEpisode.script} rate={speechRate} onNext={() => setCurrentStep('quiz')} />}
-          {currentStep === 'quiz' && <QuizStep quizzes={selectedEpisode.quizzes} onNext={() => setCurrentStep('vocabulary')} />}
-          {currentStep === 'vocabulary' && <VocabularyStep questions={selectedEpisode.vocab_quizzes} rate={speechRate} onNext={() => setCurrentStep('phrases')} />}
-          {currentStep === 'phrases' && <KeyPhrasesInternal items={selectedEpisode.key_phrases} rate={speechRate} onNext={() => setCurrentStep('dictation')} />}
-          {currentStep === 'dictation' && <DictationStep script={selectedEpisode.script} items={selectedEpisode.dictation_items} rate={speechRate} onNext={() => setCurrentStep('reading')} />}
-          {currentStep === 'reading' && <ReadingStep slashScript={selectedEpisode.slash_script || selectedEpisode.script} japanese={selectedEpisode.japanese_translation || ""} rate={speechRate} onNext={() => setCurrentStep('overlapping')} />}
-          {currentStep === 'overlapping' && <OverlappingInternal script={selectedEpisode.script} rate={speechRate} onNext={() => setCurrentStep('shadowing')} />}
-          {currentStep === 'shadowing' && <ShadowingInternal script={selectedEpisode.script} rate={speechRate} onNext={() => setCurrentStep('result')} />}
-          
-          {currentStep === 'result' && (
-            <div className="max-w-md mx-auto text-center space-y-6 py-12 animate-in zoom-in duration-500">
-              <CheckCircle size={80} className="text-green-500 mx-auto" />
-              <h2 className="text-4xl font-black text-slate-800">Lesson Cleared!</h2>
-              <button onClick={() => setCurrentStep('menu')} className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-700 transition-all">Back to Story List</button>
-            </div>
-          )}
-        </div>
-      </main>
-    </div>
-  );
-}
+    // その他のEpisodeもID 1-12の範囲で同様に記述
+  ]
+};
