@@ -5,35 +5,24 @@ import { QuizStep } from './components/QuizStep';
 import { VocabularyStep } from './components/VocabularyStep';
 import { DictationStep } from './components/DictationStep';
 import { ReadingStep } from './components/ReadingStep';
-import { courseData, Episode, KeyPhrase } from './data/episodes';
+import { Episode, KeyPhrase } from './data/types'; // types.ts からインポート
+import { courseData } from './data/episodes';
 
-// 音声を強制停止するユーティリティ
 const stopSpeech = () => {
-  if ('speechSynthesis' in window) {
-    window.speechSynthesis.cancel();
-  }
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 };
 
-// --- インライン・キーフレーズ ---
 const KeyPhrasesInternal = ({ items, rate, onNext }: { items: KeyPhrase[], rate: number, onNext: () => void }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const currentItem = items[currentIndex];
-  
   const handleSpeak = (text: string) => {
     stopSpeech();
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'en-US';
-    u.rate = rate;
-    window.speechSynthesis.speak(u);
+    u.lang = 'en-US'; u.rate = rate; window.speechSynthesis.speak(u);
   };
-
-  const handleNext = () => { 
-    if (currentIndex < items.length - 1) {
-      setCurrentIndex(prev => prev + 1);
-    } else {
-      stopSpeech();
-      onNext();
-    }
+  const handleNext = () => {
+    if (currentIndex < items.length - 1) setCurrentIndex(prev => prev + 1);
+    else { stopSpeech(); onNext(); }
   };
   if (!currentItem) return null;
   return (
@@ -43,32 +32,26 @@ const KeyPhrasesInternal = ({ items, rate, onNext }: { items: KeyPhrase[], rate:
         <h2 className="text-3xl font-black text-slate-800">Key Phrases</h2>
       </div>
       <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-orange-100 min-h-[250px] flex flex-col justify-center text-center space-y-6 relative">
-        <button onClick={() => handleSpeak(currentItem.phrase)} className="absolute top-4 right-4 p-3 bg-orange-50 text-orange-600 rounded-full hover:bg-orange-100 transition-all">
-          <Volume2 size={20} />
-        </button>
+        <button onClick={() => handleSpeak(currentItem.phrase)} className="absolute top-4 right-4 p-3 bg-orange-50 text-orange-600 rounded-full hover:bg-orange-100"><Volume2 size={20} /></button>
         <h3 className="text-4xl font-black text-orange-600 tracking-tight">{currentItem.phrase}</h3>
         <p className="text-xl text-slate-700 leading-relaxed font-bold">{currentItem.explanation}</p>
       </div>
       <div className="flex gap-4">
-        <button onClick={() => currentIndex > 0 && setCurrentIndex(c => c - 1)} disabled={currentIndex === 0} className={`flex-1 py-4 rounded-2xl font-bold ${currentIndex === 0 ? 'bg-slate-100 text-slate-300' : 'bg-white text-slate-600 border-2 border-slate-200 hover:border-orange-300'}`}>Back</button>
-        <button onClick={handleNext} className="flex-[2] py-4 bg-orange-500 text-white font-bold rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all">{currentIndex < items.length - 1 ? 'Next Phrase' : 'Start Dictation'}</button>
+        <button onClick={() => currentIndex > 0 && setCurrentIndex(c => c - 1)} disabled={currentIndex === 0} className="flex-1 py-4 bg-white text-slate-600 border-2 rounded-2xl font-bold disabled:opacity-30">Back</button>
+        <button onClick={handleNext} className="flex-[2] py-4 bg-orange-500 text-white font-bold rounded-2xl shadow-lg">Next Phrase</button>
       </div>
     </div>
   );
 };
 
-// --- インライン・オーバーラッピング ---
 const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: number, onNext: () => void }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const handlePlay = () => {
-    if ('speechSynthesis' in window) {
-      if (isPlaying) { window.speechSynthesis.cancel(); setIsPlaying(false); }
-      else { 
-        stopSpeech();
-        const u = new SpeechSynthesisUtterance(script); u.lang = 'en-US'; 
-        u.rate = rate; 
-        u.onend = () => setIsPlaying(false); window.speechSynthesis.speak(u); setIsPlaying(true); 
-      }
+    if (isPlaying) { stopSpeech(); setIsPlaying(false); }
+    else {
+      stopSpeech();
+      const u = new SpeechSynthesisUtterance(script); u.lang = 'en-US'; u.rate = rate;
+      u.onend = () => setIsPlaying(false); window.speechSynthesis.speak(u); setIsPlaying(true);
     }
   };
   return (
@@ -76,7 +59,7 @@ const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: n
       <div className="p-3 bg-orange-500 rounded-2xl text-white inline-block mx-auto shadow-md"><Mic size={32} /></div>
       <h2 className="text-3xl font-black text-slate-800">Step 6: Overlapping</h2>
       <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-slate-100 relative text-left">
-        <button onClick={handlePlay} className="absolute top-4 right-4 w-14 h-14 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center hover:bg-orange-200 transition-all">
+        <button onClick={handlePlay} className="absolute top-4 right-4 w-14 h-14 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center">
           {isPlaying ? <Square size={24} /> : <Volume2 size={24} />}
         </button>
         <p className="text-2xl text-slate-800 leading-relaxed font-bold pr-16">{script}</p>
@@ -86,18 +69,14 @@ const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: n
   );
 };
 
-// --- インライン・シャドーイング ---
 const ShadowingInternal = ({ script, rate, onNext }: { script: string, rate: number, onNext: () => void }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const handlePlay = () => {
-    if ('speechSynthesis' in window) {
-      if (isPlaying) { window.speechSynthesis.cancel(); setIsPlaying(false); }
-      else { 
-        stopSpeech();
-        const u = new SpeechSynthesisUtterance(script); u.lang = 'en-US'; 
-        u.rate = rate; 
-        u.onend = () => setIsPlaying(false); window.speechSynthesis.speak(u); setIsPlaying(true); 
-      }
+    if (isPlaying) { stopSpeech(); setIsPlaying(false); }
+    else {
+      stopSpeech();
+      const u = new SpeechSynthesisUtterance(script); u.lang = 'en-US'; u.rate = rate;
+      u.onend = () => setIsPlaying(false); window.speechSynthesis.speak(u); setIsPlaying(true);
     }
   };
   return (
@@ -123,13 +102,8 @@ export default function App() {
   const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const link = document.createElement('link');
-    link.href = 'https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;900&display=swap';
-    link.rel = 'stylesheet';
-    document.head.appendChild(link);
-    const style = document.createElement('style');
-    style.textContent = `.font-pop { font-family: 'Kiwi Maru', sans-serif !important; } body { background-color: #f8fafc; }`;
-    document.head.appendChild(style);
+    const link = document.createElement('link'); link.href = 'https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500;900&display=swap'; link.rel = 'stylesheet'; document.head.appendChild(link);
+    const style = document.createElement('style'); style.textContent = `.font-pop { font-family: 'Kiwi Maru', sans-serif !important; } body { background-color: #f8fafc; }`; document.head.appendChild(style);
     const audio = new Audio('/bgm.mp3'); audio.loop = true; audio.volume = 0.15; bgmRef.current = audio;
     return () => { audio.pause(); stopSpeech(); };
   }, []);
@@ -181,7 +155,7 @@ export default function App() {
             <div className="space-y-12 animate-in fade-in slide-in-from-bottom-8 duration-1000">
               <div className="text-center py-16 bg-gradient-to-b from-orange-50 to-white rounded-[60px] border-4 border-orange-100 relative shadow-inner overflow-hidden">
                 <h1 className="text-sm font-black text-orange-400 uppercase tracking-[0.5em] mb-4 relative z-10">The Ultimate Learning Method</h1>
-                <h2 className="text-6xl md:text-7xl font-black text-orange-700 leading-none tracking-tighter relative z-10">English<br /><span className="text-orange-500">Navigator</span></h2>
+                <h2 className="text-6xl md:text-7xl font-black text-orange-700 leading-none tracking-tighter relative z-10">English Navigator</h2>
                 
                 <div className="mt-8 relative z-10 flex flex-col items-center gap-3">
                   <div className="flex items-center gap-2 text-slate-400 font-black text-[10px] uppercase tracking-widest"><Zap size={14} className="text-orange-400" /> Speed Control</div>
@@ -198,7 +172,6 @@ export default function App() {
                 {renderLessonSection(2, 5, 8)}
                 {renderLessonSection(3, 9, 12)}
               </div>
-              <p className="text-center text-slate-400 font-bold text-sm pb-10">Master English through Listening, Reading, and Speaking.</p>
             </div>
           )}
 
