@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, Play, CheckCircle, BookOpen, Volume2, Square, Mic, Headphones, Zap, ChevronDown } from 'lucide-react';
+import { Home, Play, CheckCircle, BookOpen, Volume2, Square, Mic, Headphones, ChevronDown } from 'lucide-react';
+
+// コンポーネントのインポート
 import { ListeningStep } from './components/ListeningStep';
 import { QuizStep } from './components/QuizStep';
 import { VocabularyStep } from './components/VocabularyStep';
@@ -7,8 +9,10 @@ import { DictationStep } from './components/DictationStep';
 import { ReadingStep } from './components/ReadingStep';
 import { ReadingPractice } from './components/ReadingPractice';
 
-import { courseData } from './data/episodes';
-import type { Episode, KeyPhrase } from './data/episodes';
+// データと型のインポート
+// ディレクトリ構成に合わせて index.ts を参照
+import { courseData } from './data/episodes/index'; 
+import type { Episode } from './data/types';
 
 const stopSpeech = () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -148,17 +152,21 @@ export default function App() {
   };
 
   const renderMainMenu = () => {
+    // 1レッスン3パート構成のID計算
     const startId = (selectedLesson - 1) * 3 + 1;
-    const filteredEpisodes = courseData.episodes.filter((ep) => ep.id >= startId && ep.id <= startId + 2);
+    const endId = startId + 2;
+    const filteredEpisodes = courseData.episodes.filter(
+      (ep) => ep.id >= startId && ep.id <= endId
+    );
 
     return (
       <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <div className="text-center py-12 bg-gradient-to-b from-orange-50 to-white rounded-[60px] border-4 border-orange-100 shadow-inner relative overflow-hidden">
-          <h2 className="text-5xl md:text-6xl font-black text-orange-700 leading-none tracking-tighter relative z-10">
+          <h2 className="text-5xl md:text-6xl font-black text-orange-700 leading-none tracking-tighter relative z-10 font-pop">
             English<br />
             <span className="text-orange-500">Navigator</span>
           </h2>
-          <div className="mt-8 flex flex-col items-center gap-2 relative z-10 px-6">
+          <div className="mt-8 flex flex-col items-center gap-2 relative z-10 px-6 font-pop">
             <label className="text-xs font-black text-orange-400 uppercase tracking-widest">Select Your Lesson</label>
             <div className="relative w-full max-w-xs">
               <select
@@ -168,14 +176,14 @@ export default function App() {
               >
                 <option value={1}>Lesson 1: Wagashi Tradition</option>
                 <option value={2}>Lesson 2: Smartphones</option>
-                <option value={3}>Lesson 3: Leadership Types</option>
+                <option value={3}>Lesson 3: Two Kinds of Leadership</option>
               </select>
               <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-orange-400 pointer-events-none" size={24} />
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-pop">
           {filteredEpisodes.map((ep, idx) => (
             <div
               key={ep.id}
@@ -191,9 +199,7 @@ export default function App() {
                   {ep.title}
                 </h3>
               </div>
-              <div className="mt-2 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
-                <Play className="text-slate-300 group-hover:text-orange-500 translate-x-0.5" size={18} fill="currentColor" />
-              </div>
+              <Play className="text-slate-300 group-hover:text-orange-500" size={20} fill="currentColor" />
             </div>
           ))}
         </div>
@@ -209,7 +215,7 @@ export default function App() {
             stopSpeech();
             setCurrentStep('menu');
           }}
-          className="p-2 bg-slate-100 hover:bg-orange-100 rounded-xl text-slate-800"
+          className="p-2 bg-slate-100 hover:bg-orange-100 rounded-xl text-slate-800 transition-colors"
         >
           <Home size={22} />
         </button>
@@ -218,8 +224,8 @@ export default function App() {
             <button
               key={r}
               onClick={() => setSpeechRate(r)}
-              className={`px-3 py-1 rounded-lg text-xs font-black ${
-                speechRate === r ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-400'
+              className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
+                speechRate === r ? 'bg-orange-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
               }`}
             >
               {r}x
@@ -238,7 +244,7 @@ export default function App() {
                   stopSpeech();
                   setCurrentStep(step);
                 }}
-                className={`py-3 px-4 text-[9px] font-black uppercase tracking-widest border-b-4 ${
+                className={`py-3 px-4 text-[9px] font-black uppercase tracking-widest border-b-4 transition-all ${
                   currentStep === step ? 'border-orange-500 text-orange-600' : 'border-transparent text-slate-400'
                 }`}
               >
@@ -299,7 +305,7 @@ export default function App() {
           )}
 
           {currentStep === 'result' && (
-            <div className="max-w-md mx-auto text-center space-y-6 py-12 animate-in zoom-in duration-500">
+            <div className="max-w-md mx-auto text-center space-y-6 py-12 animate-in zoom-in duration-500 font-pop">
               <CheckCircle size={80} className="text-green-500 mx-auto" />
               <h2 className="text-4xl font-black text-slate-800">Perfect!</h2>
               <div className="bg-white p-6 rounded-3xl shadow-xl border-4 border-orange-100 flex justify-around">
@@ -314,7 +320,7 @@ export default function App() {
               </div>
               <button
                 onClick={() => setCurrentStep('menu')}
-                className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-700 transition-all"
+                className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-700 transition-all transform active:scale-95"
               >
                 Back to Menu
               </button>
