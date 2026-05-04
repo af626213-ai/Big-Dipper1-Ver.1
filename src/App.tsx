@@ -10,7 +10,6 @@ import { ReadingStep } from './components/ReadingStep';
 import { ReadingPractice } from './components/ReadingPractice';
 
 // データと型のインポート
-// ディレクトリ構成に合わせて index.ts を参照
 import { courseData } from './data/episodes/index'; 
 import type { Episode } from './data/types';
 
@@ -124,8 +123,10 @@ export default function App() {
   >('menu');
   const [selectedLesson, setSelectedLesson] = useState<number>(1);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode>(courseData.episodes[0]);
+  const [isBgmPlaying, setIsBgmPlaying] = useState(false);
   const [speechRate, setSpeechRate] = useState<number>(1.0);
   const [finalScores, setFinalScores] = useState({ acc: 0, wpm: 0 });
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -135,15 +136,36 @@ export default function App() {
     const style = document.createElement('style');
     style.textContent = `.font-pop { font-family: 'Kiwi Maru', sans-serif !important; } body { background-color: #f8fafc; }`;
     document.head.appendChild(style);
+
+    const audio = new Audio('/bgm.mp3');
+    audio.loop = true;
+    audio.volume = 0.15;
+    bgmRef.current = audio;
+
+    return () => {
+      audio.pause();
+      stopSpeech();
+    };
   }, []);
 
+  // 効果音（ファンファーレ）の制御
   useEffect(() => {
-    if (currentStep === 'result') {
+    if (currentStep === 'result' && isBgmPlaying) {
       const finishAudio = new Audio('/finish.mp3');
       finishAudio.volume = 0.5;
       finishAudio.play().catch(() => {});
     }
-  }, [currentStep]);
+  }, [currentStep, isBgmPlaying]);
+
+  const toggleBgm = () => {
+    if (!bgmRef.current) return;
+    if (isBgmPlaying) {
+      bgmRef.current.pause();
+    } else {
+      bgmRef.current.play().catch(() => {});
+    }
+    setIsBgmPlaying(!isBgmPlaying);
+  };
 
   const handleStart = (ep: Episode) => {
     stopSpeech();
@@ -152,7 +174,7 @@ export default function App() {
   };
 
   const renderMainMenu = () => {
-    // 1レッスン3パート構成のID計算
+    // 1レッスン3パート構成のID抽出ロジック
     const startId = (selectedLesson - 1) * 3 + 1;
     const endId = startId + 2;
     const filteredEpisodes = courseData.episodes.filter(
@@ -162,7 +184,7 @@ export default function App() {
     return (
       <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
         <div className="text-center py-12 bg-gradient-to-b from-orange-50 to-white rounded-[60px] border-4 border-orange-100 shadow-inner relative overflow-hidden">
-          <h2 className="text-5xl md:text-6xl font-black text-orange-700 leading-none tracking-tighter relative z-10 font-pop">
+          <h2 className="text-5xl md:text-6xl font-black text-orange-700 leading-none tracking-tighter relative z-10">
             English<br />
             <span className="text-orange-500">Navigator</span>
           </h2>
@@ -219,18 +241,26 @@ export default function App() {
         >
           <Home size={22} />
         </button>
-        <div className="flex gap-1">
-          {[0.6, 0.8, 1.0, 1.1].map((r) => (
-            <button
-              key={r}
-              onClick={() => setSpeechRate(r)}
-              className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
-                speechRate === r ? 'bg-orange-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
-              }`}
-            >
-              {r}x
-            </button>
-          ))}
+        <div className="flex gap-4 items-center">
+          <button 
+            onClick={toggleBgm} 
+            className={`px-4 py-2 rounded-xl border-2 font-bold text-sm transition-all ${isBgmPlaying ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-600 border-slate-200'}`}
+          >
+            {isBgmPlaying ? 'SOUND ON' : 'SOUND OFF'}
+          </button>
+          <div className="flex gap-1">
+            {[0.6, 0.8, 1.0, 1.1].map((r) => (
+              <button
+                key={r}
+                onClick={() => setSpeechRate(r)}
+                className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
+                  speechRate === r ? 'bg-orange-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
+                }`}
+              >
+                {r}x
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -310,11 +340,11 @@ export default function App() {
               <h2 className="text-4xl font-black text-slate-800">Perfect!</h2>
               <div className="bg-white p-6 rounded-3xl shadow-xl border-4 border-orange-100 flex justify-around">
                 <div>
-                  <p className="text-xs text-slate-400">Accuracy</p>
+                  <p className="text-xs text-slate-400 font-bold uppercase">Accuracy</p>
                   <p className="text-2xl font-black text-cyan-600">{finalScores.acc}%</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">WPM</p>
+                  <p className="text-xs text-slate-400 font-bold uppercase">WPM</p>
                   <p className="text-2xl font-black text-rose-600">{finalScores.wpm}</p>
                 </div>
               </div>
