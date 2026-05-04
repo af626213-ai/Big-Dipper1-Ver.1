@@ -148,14 +148,14 @@ export default function App() {
     };
   }, []);
 
-  // 効果音（ファンファーレ）の制御
+  // 効果音（ファンファーレ）の制御：SOUND OFFでもリザルト時は鳴る設定
   useEffect(() => {
-    if (currentStep === 'result' && isBgmPlaying) {
+    if (currentStep === 'result') {
       const finishAudio = new Audio('/finish.mp3');
       finishAudio.volume = 0.5;
       finishAudio.play().catch(() => {});
     }
-  }, [currentStep, isBgmPlaying]);
+  }, [currentStep]);
 
   const toggleBgm = () => {
     if (!bgmRef.current) return;
@@ -174,7 +174,6 @@ export default function App() {
   };
 
   const renderMainMenu = () => {
-    // 1レッスン3パート構成のID抽出ロジック
     const startId = (selectedLesson - 1) * 3 + 1;
     const endId = startId + 2;
     const filteredEpisodes = courseData.episodes.filter(
@@ -182,7 +181,7 @@ export default function App() {
     );
 
     return (
-      <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 font-pop">
         <div className="text-center py-12 bg-gradient-to-b from-orange-50 to-white rounded-[60px] border-4 border-orange-100 shadow-inner relative overflow-hidden">
           <h2 className="text-5xl md:text-6xl font-black text-orange-700 leading-none tracking-tighter relative z-10">
             English<br />
@@ -205,7 +204,7 @@ export default function App() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 font-pop">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredEpisodes.map((ep, idx) => (
             <div
               key={ep.id}
@@ -246,7 +245,7 @@ export default function App() {
             onClick={toggleBgm} 
             className={`px-4 py-2 rounded-xl border-2 font-bold text-sm transition-all ${isBgmPlaying ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-600 border-slate-200'}`}
           >
-            {isBgmPlaying ? 'SOUND ON' : 'SOUND OFF'}
+            {isBgmPlaying ? 'BGM ON' : 'BGM OFF'}
           </button>
           <div className="flex gap-1">
             {[0.6, 0.8, 1.0, 1.1].map((r) => (
