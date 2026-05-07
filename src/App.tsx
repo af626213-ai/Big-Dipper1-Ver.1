@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Home, Play, CheckCircle, BookOpen, Volume2, Square, Mic, Headphones, ChevronDown, X, Share } from 'lucide-react';
+import { Home, Play, CheckCircle, BookOpen, Volume2, Square, Mic, Headphones, ChevronDown } from 'lucide-react';
+
+// コンポーネントのインポート
 import { ListeningStep } from './components/ListeningStep';
 import { QuizStep } from './components/QuizStep';
 import { VocabularyStep } from './components/VocabularyStep';
@@ -7,61 +9,12 @@ import { DictationStep } from './components/DictationStep';
 import { ReadingStep } from './components/ReadingStep';
 import { ReadingPractice } from './components/ReadingPractice';
 
-import { courseData } from './data/episodes';
-import type { Episode, KeyPhrase } from './data/episodes';
+// データと型のインポート
+import { courseData } from './data/episodes/index'; 
+import type { Episode } from './data/types';
 
 const stopSpeech = () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
-};
-
-// --- ホーム画面追加を促すポップアップ ---
-const PWAInstallPrompt = () => {
-  const [showPrompt, setShowPrompt] = useState(false);
-
-  useEffect(() => {
-    // iOS/iPadOS かつ、まだホーム画面に追加されていない（スタンドアロンでない）場合に表示
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-    const isStandalone = (window as any).navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
-
-    if (isIOS && !isStandalone) {
-      // 2秒後に表示
-      const timer = setTimeout(() => setShowPrompt(true), 2000);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
-  if (!showPrompt) return null;
-
-  return (
-    <div className="fixed inset-x-4 bottom-10 z-[100] animate-in slide-in-from-bottom-8 duration-500">
-      <div className="bg-white rounded-[24px] p-6 shadow-2xl border-4 border-slate-100 flex items-start gap-4 relative">
-        <button 
-          onClick={() => setShowPrompt(false)}
-          className="absolute top-4 right-4 text-slate-300 hover:text-slate-500 transition-colors"
-        >
-          <X size={24} />
-        </button>
-        
-        {/* publicに保存したアイコンを表示 */}
-        <img 
-          src="/apple-touch-icon.PNG" 
-          alt="App Icon" 
-          className="w-16 h-16 rounded-2xl shadow-md border border-slate-50"
-        />
-        
-        <div className="flex-1 pr-6">
-          <h3 className="text-lg font-black text-slate-800 mb-1">ホーム画面に追加</h3>
-          <p className="text-sm text-slate-500 font-bold leading-snug">
-            全画面で快適にプレイできます。下部の
-            <span className="inline-block mx-1 p-1 bg-slate-100 rounded text-cyan-600 align-middle">
-              <Share size={14} className="inline" />
-            </span>
-            をタップし、「ホーム画面に追加」を選択してください。
-          </p>
-        </div>
-      </div>
-    </div>
-  );
 };
 
 // --- インライン・オーバーラッピング ---
@@ -170,8 +123,10 @@ export default function App() {
   >('menu');
   const [selectedLesson, setSelectedLesson] = useState<number>(1);
   const [selectedEpisode, setSelectedEpisode] = useState<Episode>(courseData.episodes[0]);
+  const [isBgmPlaying, setIsBgmPlaying] = useState(false);
   const [speechRate, setSpeechRate] = useState<number>(1.0);
   const [finalScores, setFinalScores] = useState({ acc: 0, wpm: 0 });
+  const bgmRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const link = document.createElement('link');
@@ -181,8 +136,19 @@ export default function App() {
     const style = document.createElement('style');
     style.textContent = `.font-pop { font-family: 'Kiwi Maru', sans-serif !important; } body { background-color: #f8fafc; }`;
     document.head.appendChild(style);
+
+    const audio = new Audio('/bgm.mp3');
+    audio.loop = true;
+    audio.volume = 0.15;
+    bgmRef.current = audio;
+
+    return () => {
+      audio.pause();
+      stopSpeech();
+    };
   }, []);
 
+  // 効果音（ファンファーレ）の制御：常に鳴る設定
   useEffect(() => {
     if (currentStep === 'result') {
       const finishAudio = new Audio('/finish.mp3');
@@ -190,6 +156,16 @@ export default function App() {
       finishAudio.play().catch(() => {});
     }
   }, [currentStep]);
+
+  const toggleBgm = () => {
+    if (!bgmRef.current) return;
+    if (isBgmPlaying) {
+      bgmRef.current.pause();
+    } else {
+      bgmRef.current.play().catch(() => {});
+    }
+    setIsBgmPlaying(!isBgmPlaying);
+  };
 
   const handleStart = (ep: Episode) => {
     stopSpeech();
@@ -199,25 +175,30 @@ export default function App() {
 
   const renderMainMenu = () => {
     const startId = (selectedLesson - 1) * 3 + 1;
-    const filteredEpisodes = courseData.episodes.filter((ep) => ep.id >= startId && ep.id <= startId + 2);
+    const endId = startId + 2;
+    const filteredEpisodes = courseData.episodes.filter(
+      (ep) => ep.id >= startId && ep.id <= endId
+    );
 
     return (
-      <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000">
+      <div className="space-y-10 animate-in fade-in slide-in-from-bottom-8 duration-1000 font-pop">
         <div className="text-center py-12 bg-gradient-to-b from-orange-50 to-white rounded-[60px] border-4 border-orange-100 shadow-inner relative overflow-hidden">
           <h2 className="text-5xl md:text-6xl font-black text-orange-700 leading-none tracking-tighter relative z-10">
             English<br />
             <span className="text-orange-500">Navigator</span>
           </h2>
-          <div className="mt-8 flex flex-col items-center gap-2 relative z-10 px-6">
+          <div className="mt-8 flex flex-col items-center gap-2 relative z-10 px-6 font-pop">
             <label className="text-xs font-black text-orange-400 uppercase tracking-widest">Select Your Lesson</label>
             <div className="relative w-full max-w-xs">
               <select
                 value={selectedLesson}
                 onChange={(e) => setSelectedLesson(Number(e.target.value))}
-                className="w-full p-4 bg-white border-4 border-orange-100 rounded-3xl font-black text-slate-700 appearance-none focus:border-orange-400 outline-none shadow-lg cursor-pointer"
+                className="w-full p-4 bg-white border-4 border-orange-100 rounded-3xl font-black text-slate-700 appearance-none focus:border-orange-400 outline-none shadow-lg cursor-pointer text-center"
               >
-                <option value={1}>Lesson 1: Matsuoka Shuzo</option>
-                <option value={2}>Lesson 2: The Jar of Life</option>
+                {/* シンプルな名前に変更 */}
+                <option value={1}>Lesson 1</option>
+                <option value={2}>Lesson 2</option>
+                <option value={3}>Lesson 3</option>
               </select>
               <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-orange-400 pointer-events-none" size={24} />
             </div>
@@ -240,9 +221,7 @@ export default function App() {
                   {ep.title}
                 </h3>
               </div>
-              <div className="mt-2 w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center group-hover:bg-orange-100 transition-colors">
-                <Play className="text-slate-300 group-hover:text-orange-500 translate-x-0.5" size={18} fill="currentColor" />
-              </div>
+              <Play className="text-slate-300 group-hover:text-orange-500" size={20} fill="currentColor" />
             </div>
           ))}
         </div>
@@ -252,31 +231,36 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col font-pop">
-      {/* ポップアップコンポーネントを配置 */}
-      <PWAInstallPrompt />
-
       <header className="bg-white sticky top-0 z-50 border-b-4 border-slate-100 px-6 py-4 flex justify-between items-center shadow-sm">
         <button
           onClick={() => {
             stopSpeech();
             setCurrentStep('menu');
           }}
-          className="p-2 bg-slate-100 hover:bg-orange-100 rounded-xl text-slate-800"
+          className="p-2 bg-slate-100 hover:bg-orange-100 rounded-xl text-slate-800 transition-colors"
         >
           <Home size={22} />
         </button>
-        <div className="flex gap-1">
-          {[0.6, 0.8, 1.0, 1.1].map((r) => (
-            <button
-              key={r}
-              onClick={() => setSpeechRate(r)}
-              className={`px-3 py-1 rounded-lg text-xs font-black ${
-                speechRate === r ? 'bg-orange-500 text-white' : 'bg-slate-100 text-slate-400'
-              }`}
-            >
-              {r}x
-            </button>
-          ))}
+        <div className="flex gap-4 items-center">
+          <button 
+            onClick={toggleBgm} 
+            className={`px-4 py-2 rounded-xl border-2 font-bold text-sm transition-all ${isBgmPlaying ? 'bg-orange-500 text-white border-orange-500' : 'bg-white text-slate-600 border-slate-200'}`}
+          >
+            {isBgmPlaying ? 'BGM ON' : 'BGM OFF'}
+          </button>
+          <div className="flex gap-1">
+            {[0.6, 0.8, 1.0, 1.1].map((r) => (
+              <button
+                key={r}
+                onClick={() => setSpeechRate(r)}
+                className={`px-3 py-1 rounded-lg text-xs font-black transition-all ${
+                  speechRate === r ? 'bg-orange-500 text-white shadow-md' : 'bg-slate-100 text-slate-400 hover:bg-slate-200'
+                }`}
+              >
+                {r}x
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -290,7 +274,7 @@ export default function App() {
                   stopSpeech();
                   setCurrentStep(step);
                 }}
-                className={`py-3 px-4 text-[9px] font-black uppercase tracking-widest border-b-4 ${
+                className={`py-3 px-4 text-[9px] font-black uppercase tracking-widest border-b-4 transition-all ${
                   currentStep === step ? 'border-orange-500 text-orange-600' : 'border-transparent text-slate-400'
                 }`}
               >
@@ -351,22 +335,22 @@ export default function App() {
           )}
 
           {currentStep === 'result' && (
-            <div className="max-w-md mx-auto text-center space-y-6 py-12 animate-in zoom-in duration-500">
+            <div className="max-w-md mx-auto text-center space-y-6 py-12 animate-in zoom-in duration-500 font-pop">
               <CheckCircle size={80} className="text-green-500 mx-auto" />
               <h2 className="text-4xl font-black text-slate-800">Perfect!</h2>
               <div className="bg-white p-6 rounded-3xl shadow-xl border-4 border-orange-100 flex justify-around">
                 <div>
-                  <p className="text-xs text-slate-400">Accuracy</p>
+                  <p className="text-xs text-slate-400 font-bold uppercase">Accuracy</p>
                   <p className="text-2xl font-black text-cyan-600">{finalScores.acc}%</p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-400">WPM</p>
+                  <p className="text-xs text-slate-400 font-bold uppercase">WPM</p>
                   <p className="text-2xl font-black text-rose-600">{finalScores.wpm}</p>
                 </div>
               </div>
               <button
                 onClick={() => setCurrentStep('menu')}
-                className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-700 transition-all"
+                className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-700 transition-all transform active:scale-95"
               >
                 Back to Menu
               </button>
