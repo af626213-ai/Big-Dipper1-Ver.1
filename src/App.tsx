@@ -17,48 +17,104 @@ const stopSpeech = () => {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
 };
 
-// --- インライン・オーバーラッピング ---
+// --- インライン・オーバーラッピング（音声イベント完全同期・単語先読み版） ---
 const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: number, onNext: () => void }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  // 現在音声が読み上げている文字の位置（インデックス）を保持
+  const [highlightIndex, setHighlightIndex] = useState(0);
+
   const handlePlay = () => {
     if (isPlaying) {
       stopSpeech();
       setIsPlaying(false);
+      setHighlightIndex(0);
     } else {
       stopSpeech();
       const u = new SpeechSynthesisUtterance(script);
       u.lang = 'en-US';
       u.rate = rate;
-      u.onend = () => setIsPlaying(false);
+
+      // 発音された瞬間の文字位置（charIndex）をリアルタイムにキャッチ
+      u.onboundary = (event) => {
+        if (event.name === 'word') {
+          setHighlightIndex(event.charIndex);
+        }
+      };
+
+      u.onend = () => {
+        setIsPlaying(false);
+        setHighlightIndex(0);
+      };
+      u.onerror = () => {
+        setIsPlaying(false);
+        setHighlightIndex(0);
+      };
+
       window.speechSynthesis.speak(u);
       setIsPlaying(true);
     }
   };
+
+  useEffect(() => {
+    return () => {
+      stopSpeech();
+    };
+  }, []);
+
+  // スクリプトを「これから読む単語の末尾」で綺麗に切り分ける
+  const renderHighlightedScript = () => {
+    if (!isPlaying || highlightIndex === 0) {
+      return <span className="text-slate-800">{script}</span>;
+    }
+
+    // 発音される単語の先頭（highlightIndex）以降で、最初のスペース（単語の区切り）を探す
+    const remainingText = script.substring(highlightIndex);
+    const nextSpaceIndex = remainingText.search(/\s/);
+    
+    // 発音中の単語の「末尾」の位置を計算（文末などでスペースがない場合は全文）
+    const breakPoint = nextSpaceIndex !== -1 
+      ? highlightIndex + nextSpaceIndex 
+      : script.length;
+
+    const spoken = script.substring(0, breakPoint);
+    const remaining = script.substring(breakPoint);
+
+    return (
+      <>
+        {/* 発音される直前の単語までを、先回りして綺麗な青色に変化 */}
+        <span className="text-sky-600 transition-colors duration-200">{spoken}</span>
+        {/* まだ読まれない先の単語は黒色のまま */}
+        <span className="text-slate-800">{remaining}</span>
+      </>
+    );
+  };
+
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500 font-pop">
       <div className="text-center space-y-2">
-        <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white shadow-md">
-          <Mic size={32} />
-        </div>
+        <div className="inline-block p-3 bg-orange-500 rounded-2xl text-white shadow-md"><Mic size={32} /></div>
         <h2 className="text-3xl font-black text-slate-800">Step 7: Overlapping</h2>
         <div className="bg-orange-50 border-2 border-orange-200 rounded-2xl p-4 mt-4 text-center text-orange-700 font-bold">
           音声にピッタリ重ねてスクリプトを同時に音読しよう！
         </div>
       </div>
-      <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-slate-100 relative">
-        <button
-          onClick={handlePlay}
-          className="absolute top-4 right-4 w-14 h-14 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center hover:bg-orange-200 transition-all"
+      
+      <div className="bg-white rounded-[32px] p-8 shadow-xl border-4 border-slate-100 relative overflow-hidden">
+        <button 
+          onClick={handlePlay} 
+          className="absolute top-4 right-4 z-10 w-14 h-14 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center hover:bg-orange-200 transition-all shadow-sm"
         >
           {isPlaying ? <Square size={24} /> : <Volume2 size={24} />}
         </button>
-        <p className="text-2xl text-slate-800 leading-relaxed pr-20 font-bold text-left">{script}</p>
+
+        {/* 1行ごとのズレも完全にゼロになり、発音と同時に単語全体が染まるテキストエリア */}
+        <p className="text-2xl font-bold text-left leading-relaxed pr-20 whitespace-pre-wrap">
+          {renderHighlightedScript()}
+        </p>
       </div>
-      <button
-        onClick={() => {
-          stopSpeech();
-          onNext();
-        }}
+
+      <button 
+        onClick={() => { stopSpeech(); onNext(); }} 
         className="w-full py-5 bg-orange-500 text-white font-bold text-xl rounded-2xl shadow-lg hover:bg-orange-600 active:scale-95 transition-all"
       >
         Go to Shadowing
@@ -66,6 +122,7 @@ const OverlappingInternal = ({ script, rate, onNext }: { script: string, rate: n
     </div>
   );
 };
+
 
 // --- インライン・シャドーイング ---
 const ShadowingInternal = ({ script, rate, onNext }: { script: string, rate: number, onNext: () => void }) => {
